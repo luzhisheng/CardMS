@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>导出管理</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+          crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+        // 选择状态
+        var selectState = false;
+
+        // 全选或者全取消
+        function AllCheck(this_form) {
+            for (var i = 0; i < this_form.elements.length; i++) {
+                // 提取控件
+                var checkbox = this_form.elements[i];
+                checkbox.checked = !selectState;
+            }
+            selectState = !selectState;
+        }
+    </script>
+    <style type="text/css">
+        .big-border {
+            background: #fff;
+            width: 1400px;
+            margin: 0 auto;
+            padding: 10px;
+        }
+
+        body {
+            background: #f3f3f3;
+        }
+
+        .page-title {
+            text-align: center;
+        }
+
+        td, th {
+            padding-right: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="big-border">
+    <h3 class="page-title">导出管理</h3>
+    <hr>
+    <h4>当前目录 {{ ossep+subdir }}</h4>
+    <hr>
+    <form action="" method="post">
+        <table>
+            <thead>
+            <tr>
+                <th><input type="checkbox" class="input_hide" onClick="AllCheck (this.form);"></th>
+                <th>文件或目录名</th>
+                <th>修改时间</th>
+                <th>大小</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% if subdir %}
+                <tr>
+                    <td></td>
+                    <td><a href="../">..{{ ossep }}</a></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            {% endif %}
+            {% for i in contents %}
+                <tr>
+                    <td><input type="checkbox" name="filename[]" value="{{ i.filename }}"></td>
+                    <td><a href="{{ i.filename }}">{{ i.filename }}</a></td>
+                    <td>{{ i.mtime }}</td>
+                    <td>{{ i.size }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <hr>
+        <button type="submit" class="btn btn-default">下载</button>
+    </form>
+    <hr>
+</div>
+</body>
+</html>
