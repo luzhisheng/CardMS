@@ -8,7 +8,7 @@ from settings import root_dir
 app = Flask(__name__)
 
 
-@app.route('/docs/')
+@app.route('/output/')
 def document():
     os.chdir(root_dir)
     current_dir = os.getcwd()
@@ -32,8 +32,8 @@ def document():
     return render_template('shared.html', contents=contents, subdir="", ossep=os.sep)
 
 
-@app.route('/docs/<subdir>/')
-@app.route('/docs/<subdir>/<fullname>')
+@app.route('/output/<subdir>/')
+@app.route('/output/<subdir>/<fullname>')
 def detail(subdir, fullname=''):
     if fullname:
         os.chdir(root_dir)
@@ -68,7 +68,7 @@ def detail(subdir, fullname=''):
         return render_template('detail.html', contents=contents, subdir=subdir, ossep=os.sep)
 
 
-@app.route('/docs/<subdir>/', methods=['POST'])
+@app.route('/output/<subdir>/', methods=['POST'])
 def downloader(subdir):
     filename_list = request.values.getlist('filename[]')
     os.chdir(root_dir)
