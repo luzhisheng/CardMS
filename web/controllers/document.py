@@ -11,3 +11,13 @@ def index():
 @route_document.route("/cat")
 def cat():
     return render_template('document/cat.html')
+
+
+@route_document.route("/set")
+def set():
+    return render_template('document/set.html')
+
+
+@route_document.route("/cat-set")
+def cat_set():
+    return render_template('document/cat_set.html')

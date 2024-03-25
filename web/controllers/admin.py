@@ -5,4 +5,4 @@ route_admin = Blueprint("admin_page", __name__)
 
 @route_admin.route("/")
 def index():
-    return render_template('index/index.html')
+    return render_template('admin/index.html')
