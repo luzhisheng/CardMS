@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>文档下载首页</title>
+    <link href="{{ buildStaticUrl('/bootstrap/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ buildStaticUrl('/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
+    <link href="{{ buildStaticUrl('/css/style.css') }}" rel="stylesheet">
+    {%block css %}{% endblock %}
+<body>
+<div id="wrapper">
+    <div id="page-wrapper" class="gray-bg" style="margin: 0 220px 0 220px; background-color: #ffffff;">
+        <div class="row border-bottom">
+            <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                <ul class="nav navbar-top-links text-center">
+                    <li class="dropdown user_info">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);">
+                            <img alt="image" class="img-circle" src="{{ buildStaticUrl('/images/common/avatar.png') }}"/>
+                        </a>
+                        <ul class="dropdown-menu dropdown-messages">
+                            <li>
+                                <div class="dropdown-messages-box">
+                                    姓名： <a href="{{ buildUrl('/user/edit') }}" class="pull-right">编辑</a>
+                                </div>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <div class="dropdown-messages-box">
+                                    手机号码：
+                                </div>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <div class="link-block text-center">
+                                    <a class="pull-left" href="{{ buildUrl('/user/reset-pwd') }}">
+                                        <i class="fa fa-lock"></i> 修改密码
+                                    </a>
+                                    <a class="pull-right" href="{{ buildUrl('/user/logout') }}">
+                                        <i class="fa fa-sign-out"></i> 退出
+                                    </a>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+
+                </ul>
+
+            </nav>
+        </div>
+        {% block content %}{% endblock %}
+    </div>
+</div>
+<div class="hidden hidden_layout_wrap">
+    <input name="domain" value=" ">
+    <input name="prefix_url" value=" ">
+</div>
+<script src="{{ buildStaticUrl('/plugins/jquery-2.1.1.js') }}"></script>
+<script src="{{ buildStaticUrl('/bootstrap/bootstrap.min.js') }}"></script>
+<script src="{{ buildStaticUrl('/plugins/layer/layer.js') }}"></script>
+<script src="{{ buildStaticUrl('/js/common.js') }}"></script>
+{%block js %}{% endblock %}
+</body>
+</html>
