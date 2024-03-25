@@ -1,0 +1,6 @@
+SQLALCHEMY_DATABASE_URI = "mysql://root:123456@127.0.0.1:3306/mysql"
+SERVER_PORT = 5555
+SERVER_HOST = "0.0.0.0"
+SERVER_DEBUG = True
+SQLALCHEMY_ECHO = True
+ROOT_DIR = r'/excel_export/'
