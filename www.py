@@ -8,6 +8,8 @@ from web.controllers.member import route_member
 from web.controllers.finance import route_finance
 from web.controllers.stat import route_stat
 from application import app
+# 拦截器
+from web.controllers.auth_interceptor import *
 
 # 首页路径
 app.register_blueprint(route_index, url_prefix="/")

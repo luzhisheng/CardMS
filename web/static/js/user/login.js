@@ -33,7 +33,7 @@ var user_login_ops = {
                     var callback = null;
                     if( res.code == 200 ){
                         callback = function(){
-                            window.location.href = common_ops.buildUrl("/");
+                            window.location.href = common_ops.buildUrl("/admin/");
                         }
                     }
                     common_ops.alert( res.msg,callback );

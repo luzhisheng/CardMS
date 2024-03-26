@@ -1,5 +1,9 @@
 # 文件共享服务
 
-配置路径 setting root_dir = r'/xxx/docs'
+后台界面图
+![图片](./web/static/images/1.png)
 
-运行脚本之后，用浏览器打开 http://127.0.0.1:5000/docs/
+生成 orm 
+```python
+flask-sqlacodegen mysql://root:123456@127.0.0.1:3306/file_server?charset=utf8mb4 --outfile "common/models/Model.py"  --flask
+```
