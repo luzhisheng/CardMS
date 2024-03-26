@@ -72,7 +72,7 @@ def login():
 @route_user.route("/edit", methods=["GET", "POST"])
 def edit():
     if request.method == "GET":
-        return opt_render("user/edit.html")
+        return opt_render("user/edit.html", {'current': 'edit'})
     else:
         resp = {
             'code': 200,
@@ -104,7 +104,7 @@ def edit():
 @route_user.route("/reset-pwd", methods=["GET", "POST"])
 def reset_pwd():
     if request.method == "GET":
-        return opt_render("user/reset_pwd.html")
+        return opt_render("user/reset_pwd.html", {'current': 'reset-pwd'})
     else:
         resp = {
             'code': 200,
@@ -134,7 +134,11 @@ def reset_pwd():
         user_info.login_pwd = gen_pwd(new_password, user_info.login_salt)
         db.session.add(user_info)
         db.session.commit()
-        return jsonify(resp)
+
+        # 修改密码后设置cookie
+        response = make_response(json.dumps(resp))
+        response.set_cookie("file_server", f"{gene_auth_code(user_info)}#{user_info.uid}")
+        return response
 
 
 @route_user.route("/logout")
