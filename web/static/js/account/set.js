@@ -18,7 +18,10 @@ var account_set_ops = {
             var mobile = mobile_target.val();
 
             var email_target = $(".wrap_account_set input[name=email]");
-            var email = email_target.val();
+            var email = email_target.val()
+
+            var sex_target = $(".wrap_account_set input[name=sex]");
+            var sex = sex_target.val();
 
             var login_name_target = $(".wrap_account_set input[name=login_name]");
             var login_name = login_name_target.val();
@@ -41,6 +44,11 @@ var account_set_ops = {
                 return false;
             }
 
+            if(  sex.length !== 1 ){
+                common_ops.tip( "请输入符合规范的性别~~",sex_target );
+                return false;
+            }
+
             if( login_name.length < 1 ){
                 common_ops.tip( "请输入符合规范的登录用户名~~",login_name_target );
                 return false;
@@ -57,6 +65,7 @@ var account_set_ops = {
                 nickname: nickname,
                 mobile: mobile,
                 email: email,
+                sex: sex,
                 login_name:login_name,
                 login_pwd:login_pwd,
                 id:$(".wrap_account_set input[name=id]").val()

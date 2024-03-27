@@ -1,30 +1,12 @@
 from flask import Blueprint, request, jsonify
 from flask import make_response, redirect, g
-from web.controllers.helper import opt_render
+from web.controllers.helper import opt_render, gen_pwd, gene_auth_code
 from application import db
 import json
 from common.models.Model import User
-import hashlib
-import base64
+
 
 route_user = Blueprint("user_page", __name__)
-
-
-# 密码加密
-def gen_pwd(pwd, salt):
-    m = hashlib.md5()
-    str = f"{base64.encodebytes(pwd.encode('utf-8'))}-{salt}"
-    m.update(str.encode("utf-8"))
-    return m.hexdigest()
-
-
-# cookie加密
-def gene_auth_code(user_info):
-    m = hashlib.md5()
-    str = f"{user_info.login_name}-{user_info.login_salt}-{user_info.login_pwd}-{user_info.uid}"
-    base64.encodebytes(str.encode('utf-8'))
-    m.update(str.encode("utf-8"))
-    return m.hexdigest()
 
 
 @route_user.route("/login", methods=["GET", "POST"])
