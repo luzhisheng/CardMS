@@ -22,7 +22,7 @@ var food_cat_ops = {
         var callback = {
             'ok':function(){
                 $.ajax({
-                    url:common_ops.buildUrl( "/food/cat-ops" ),
+                    url:common_ops.buildUrl( "/cards/cat-ops" ),
                     type:'POST',
                     data:{
                         act:act,

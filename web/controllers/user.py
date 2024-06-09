@@ -40,9 +40,15 @@ def login():
             return jsonify(resp)
 
         # 密码加密
+        print(gen_pwd(login_pwd, user_info.login_salt))
         if user_info.login_pwd != gen_pwd(login_pwd, user_info.login_salt):
             resp['code'] = -1
             resp['msg'] = "请输入正确的用户名/密码-4"
+            return jsonify(resp)
+
+        if user_info.status != 1:
+            resp['code'] = -1
+            resp['msg'] = "账号被禁用，请找管理员核实"
             return jsonify(resp)
 
         # 设置cookie

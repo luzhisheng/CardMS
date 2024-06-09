@@ -1,6 +1,6 @@
 {% extends "common/layout_main.html" %}
 {% block content %}
-{% include "common/tab_document.html" %}
+{% include "common/tab_cards.html" %}
 <div class="row">
     <div class="col-lg-12">
         <form class="form-inline wrap_search">
@@ -18,7 +18,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <a class="btn btn-w-m btn-outline btn-primary pull-right"
-                       href="{{ buildUrl('/document/cat-set') }}">
+                       href="{{ buildUrl('/cards/cat-set') }}">
                         <i class="fa fa-plus"></i>分类
                     </a>
                 </div>
@@ -30,7 +30,6 @@
             <tr>
                 <th>序号</th>
                 <th>分类名称</th>
-                <th>状态</th>
                 <th>权重</th>
                 <th>操作</th>
             </tr>
@@ -41,12 +40,11 @@
             <tr>
                 <td>{{ item.id }}</td>
                 <td>{{ item.name }}</td>
-                <td>{{ item.status_desc }}</td>
                 <td>{{ item.weight }}</td>
                 <td>
 
-                     {%  if item.status == 1 %}
-                    <a class="m-l" href="{{ buildUrl('/document/cat-set') }}?id={{  item.id }}">
+                    {%  if item.status == 1 %}
+                    <a class="m-l" href="{{ buildUrl('/cards/cat-set') }}?id={{  item.id }}">
                         <i class="fa fa-edit fa-lg"></i>
                     </a>
 
@@ -71,5 +69,5 @@
 </div>
 {% endblock %}
 {% block js %}
-<script src="{{ buildStaticUrl('/js/food/cat.js') }}"></script>
+<script src="{{ buildStaticUrl('/js/cards/cat.js') }}"></script>
 {% endblock %}

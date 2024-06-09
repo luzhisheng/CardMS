@@ -1,6 +1,6 @@
 {% extends "common/layout_main.html" %}
 {% block content %}
-{% include "common/tab_document.html" %}
+{% include "common/tab_cards.html" %}
 <div class="row">
     <div class="col-lg-12">
         <form class="form-inline wrap_search">
@@ -36,8 +36,8 @@
             <hr>
             <div class="row">
                 <div class="col-lg-12">
-                    <a class="btn btn-w-m btn-outline btn-primary pull-right" href="{{ buildUrl('/document/set') }}">
-                        <i class="fa fa-plus"></i>文档
+                    <a class="btn btn-w-m btn-outline btn-primary pull-right" href="{{ buildUrl('/cards/set') }}">
+                        <i class="fa fa-plus"></i>卡券
                     </a>
                 </div>
             </div>
@@ -46,7 +46,7 @@
         <table class="table table-bordered m-t">
             <thead>
             <tr>
-                <th>文档名</th>
+                <th>卡券编号</th>
                 <th>分类</th>
                 <th>价格</th>
                 <th>库存</th>
@@ -64,11 +64,11 @@
                 <td>{{ item.stock }}</td>
                 <td>{{ item.tags }}</td>
                 <td>
-                    <a href="{{ buildUrl('/document/info') }}?id={{ item.id  }}">
+                    <a href="{{ buildUrl('/cards/info') }}?id={{ item.id  }}">
                         <i class="fa fa-eye fa-lg"></i>
                     </a>
                      {%  if item.status == 1 %}
-                    <a class="m-l" href="{{ buildUrl('/document/set') }}?id={{ item.id  }}">
+                    <a class="m-l" href="{{ buildUrl('/cards/set') }}?id={{ item.id  }}">
                         <i class="fa fa-edit fa-lg"></i>
                     </a>
 
@@ -89,7 +89,7 @@
             </tbody>
         </table>
         <!--分页代码已被封装到统一模板文件中-->
-        {% include 'common/pagenation.html' %}
+{#        {% include 'common/pagenation.html' %}#}
     </div>
 </div>
 {% endblock %}

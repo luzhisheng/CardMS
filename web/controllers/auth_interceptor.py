@@ -14,6 +14,7 @@ def gene_auth_code(user_info):
     return m.hexdigest()
 
 
+# @app.before_request是一个装饰器，用于注册一个在每个请求之前执行的函数。
 @app.before_request
 def before_request():
     path = request.path
@@ -52,6 +53,9 @@ def check_login():
             return False
 
         if auth_info[0] != gene_auth_code(user_info):
+            return False
+
+        if user_info.status != 1:
             return False
 
         return user_info

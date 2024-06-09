@@ -1,6 +1,6 @@
 {% extends "common/layout_main.html" %}
 {% block content %}
-{% include "common/tab_document.html" %}
+{% include "common/tab_cards.html" %}
 <div class="row mg-t20 wrap_food_set" style="">
     <div class="col-lg-12" style="">
         <h2 class="text-center">设置</h2>
@@ -21,14 +21,14 @@
             <div class="form-group">
                 <label class="col-lg-2 control-label">名称:</label>
                 <div class="col-lg-10">
-                    <input type="text" class="form-control" placeholder="请输入名称" name="name" value="111111111">
+                    <input type="text" class="form-control" placeholder="请输入名称" name="name" value="{{ info.name }}">
                 </div>
             </div>
             <div class="hr-line-dashed"></div>
             <div class="form-group">
                 <label class="col-lg-2 control-label">价格:</label>
                 <div class="col-lg-10">
-                    <input type="text" class="form-control" placeholder="请输入售价" name="price" value="111111111">
+                    <input type="text" class="form-control" placeholder="请输入售价" name="price" value="{{ info.price }}">
                 </div>
             </div>
             <div class="hr-line-dashed"></div>
@@ -43,7 +43,7 @@
                         {% if info and info.main_image %}
                         <span class="pic-each">
                             <img src="{{ buildImageUrl( info.main_image ) }}"/>
-                            <span class="fa fa-times-circle del del_image" data="111111111"></span>
+                            <span class="fa fa-times-circle del del_image" data="{{ info.price }}"></span>
                         </span>
                         {% endif %}
                     </form>
@@ -53,27 +53,27 @@
             <div class="form-group" style="">
                 <label class="col-lg-2 control-label">描述:</label>
                 <div class="col-lg-10">
-                    <textarea  id="editor"  name="summary" style="height: 300px;">111111111</textarea>
+                    <textarea  id="editor"  name="summary" style="height: 300px;">{{ info.summary }}</textarea>
                 </div>
             </div>
             <div class="hr-line-dashed"></div>
             <div class="form-group">
                 <label class="col-lg-2 control-label">库存:</label>
                 <div class="col-lg-2">
-                    <input type="text" name="stock" class="form-control" value="111111111">
+                    <input type="text" name="stock" class="form-control" value="{{ info.stock }}">
                 </div>
             </div>
             <div class="hr-line-dashed"></div>
             <div class="form-group">
                 <label class="col-lg-2 control-label">标签:</label>
                 <div class="col-lg-10">
-                    <input type="text" class="form-control" name="tags" value="111111111">
+                    <input type="text" class="form-control" name="tags" value="{{ info.tags }}">
                 </div>
             </div>
             <div class="hr-line-dashed"></div>
             <div class="form-group">
                 <div class="col-lg-4 col-lg-offset-2">
-                    <input type="hidden" name="id" value="111111111">
+                    <input type="hidden" name="id" value="{{ info.id }}">
                     <button class="btn btn-w-m btn-outline btn-primary save">保存</button>
                 </div>
             </div>
@@ -98,5 +98,5 @@
 <script src="{{ buildStaticUrl( '/plugins/tagsinput/jquery.tagsinput.min.js' ) }}"></script>
 
 
-<script src="{{ buildStaticUrl( '/js/food/set.js' ) }}"></script>
+<script src="{{ buildStaticUrl( '/js/cards/set.js' ) }}"></script>
 {% endblock %}
