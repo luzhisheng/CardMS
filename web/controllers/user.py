@@ -40,7 +40,6 @@ def login():
             return jsonify(resp)
 
         # 密码加密
-        print(gen_pwd(login_pwd, user_info.login_salt))
         if user_info.login_pwd != gen_pwd(login_pwd, user_info.login_salt):
             resp['code'] = -1
             resp['msg'] = "请输入正确的用户名/密码-4"

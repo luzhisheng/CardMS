@@ -9,7 +9,6 @@ var upload = {
         }
         var html = '<img src="' + common_ops.buildPicUrl(file_key) + '"/>'
                 + '<span class="fa fa-times-circle del del_image" data="' + file_key + '"></span>';
-
         if ($(".upload_pic_wrap .pic-each").size() > 0) {
             $(".upload_pic_wrap .pic-each").html(html);
         } else {
@@ -119,7 +118,7 @@ var food_set_ops = {
             };
 
             $.ajax({
-                url: common_ops.buildUrl("/food/set"),
+                url: common_ops.buildUrl("/cards/set"),
                 type: 'POST',
                 data: data,
                 dataType: 'json',
@@ -128,7 +127,7 @@ var food_set_ops = {
                     var callback = null;
                     if (res.code == 200) {
                         callback = function () {
-                            window.location.href = common_ops.buildUrl("/food/index");
+                            window.location.href = common_ops.buildUrl("/cards/index");
                         }
                     }
                     common_ops.alert(res.msg, callback);
@@ -144,15 +143,7 @@ var food_set_ops = {
         that.ue = UE.getEditor('editor', {
             toolbars: [
                 ['undo', 'redo', '|',
-                    'bold', 'italic', 'underline', 'strikethrough', 'removeformat', 'formatmatch', 'autotypeset', 'blockquote', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', '|', 'rowspacingtop', 'rowspacingbottom', 'lineheight'],
-                ['customstyle', 'paragraph', 'fontfamily', 'fontsize', '|',
-                    'directionalityltr', 'directionalityrtl', 'indent', '|',
-                    'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', '|', 'touppercase', 'tolowercase', '|',
-                    'link', 'unlink'],
-                ['imagenone', 'imageleft', 'imageright', 'imagecenter', '|',
-                    'insertimage', 'insertvideo', '|',
-                    'horizontal', 'spechars', '|', 'inserttable', 'deletetable', 'insertparagraphbeforetable', 'insertrow', 'deleterow', 'insertcol', 'deletecol', 'mergecells', 'mergeright', 'mergedown', 'splittocells', 'splittorows', 'splittocols']
-
+                    'bold', 'italic', 'underline', 'strikethrough', 'removeformat', 'formatmatch', 'autotypeset', 'blockquote', 'pasteplain'],
             ],
             enableAutoSave: true,
             saveInterval: 60000,

@@ -3,4 +3,8 @@ SERVER_PORT = 5555
 SERVER_HOST = "0.0.0.0"
 SERVER_DEBUG = False
 SQLALCHEMY_ECHO = False
-ROOT_DIR = r'/excel_export/'
+UPLOAD = {
+    'ext': ['jpg', 'gif', 'bmp', 'jpeg', 'png'],
+    'prefix_path': '/web/static/upload/',
+    'prefix_url': '/status/upload'
+}

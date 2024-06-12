@@ -104,7 +104,8 @@ def set():
             rep = {"info": info, "current": "cat"}
             return opt_render('cards/set.html', rep)
         else:
-            rep = {"info": "", "current": "cat"}
+            cat_list = CardsCat.query.filter_by(status=1).order_by(CardsCat.weight.desc()).all()
+            rep = {"info": "", "current": "cat", "cat_list": cat_list}
             return opt_render('cards/set.html', rep)
     elif request.method == "POST":
         resp = {
