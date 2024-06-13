@@ -2,7 +2,7 @@ from application import db
 
 
 class Cards(db.Model):
-    __tablename__ = 'crabs'
+    __tablename__ = 'cards'
 
     id = db.Column(db.Integer, primary_key=True)
     cat_id = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue(), info='分类id')

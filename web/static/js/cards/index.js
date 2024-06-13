@@ -21,7 +21,7 @@ var food_index_ops = {
         var callback = {
             'ok':function(){
                 $.ajax({
-                    url:common_ops.buildUrl("/food/ops"),
+                    url:common_ops.buildUrl("/cards/ops"),
                     type:'POST',
                     data:{
                         act:act,
