@@ -7,16 +7,16 @@
             <div class="row  m-t p-w-m">
                 <div class="form-group">
                     <select name="status" class="form-control inline">
-                        <option value="-1">请选择状态</option>
+                        <option value="0">请选择状态</option>
                         {% for tmp_key in status_mapping %}
-                            <option value="{{ tmp_key }}"</option>
+                        <option value="{{ tmp_key }}" {% if tmp_key == search_con['status']  %} selected {% endif %}>{{  status_mapping[ tmp_key ] }}</option>
                         {%  endfor %}
                     </select>
                 </div>
                 <div class="form-group">
                     <div class="input-group">
-                        <input type="text" name="mix_kw" placeholder="请输入关键字" class="form-control" value="111111111">
-                        <input type="hidden" name="p" value="11111111111">
+                        <input type="text" name="mix_kw" placeholder="请输入关键字" class="form-control" value="">
+                        <input type="hidden" name="p" value="">
                         <span class="input-group-btn">
                             <button type="button" class="btn  btn-primary search">
                                 <i class="fa fa-search"></i>搜索
@@ -33,6 +33,7 @@
                 <th>头像</th>
                 <th>姓名</th>
                 <th>性别</th>
+                <th>手机号</th>
                 <th>状态</th>
                 <th>操作</th>
             </tr>
@@ -44,6 +45,7 @@
                 <td><img alt="image" class="img-circle" src="{{ item.avatar }}" style="width: 40px;height: 40px;"></td>
                 <td>{{ item.nickname }}</td>
                 <td>{{ item.sex_desc }}</td>
+                <td>{{ item.mobile }}</td>
                 <td>{{ item.status_desc }}</td>
                 <td>
                     <a href="{{ buildUrl('/member/info') }}?id={{  item.id }}">

@@ -1,4 +1,5 @@
 from application import db
+from application import app
 
 
 class Cards(db.Model):
@@ -49,3 +50,61 @@ class User(db.Model):
     status = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue(), info='1：有效 0：无效')
     updated_time = db.Column(db.DateTime, nullable=False, server_default=db.FetchedValue(), info='最后一次更新时间')
     created_time = db.Column(db.DateTime, nullable=False, server_default=db.FetchedValue(), info='插入时间')
+
+
+class Member(db.Model):
+    __tablename__ = 'member'
+
+    id = db.Column(db.Integer, primary_key=True)
+    nickname = db.Column(db.String(100), nullable=False, server_default=db.FetchedValue())
+    mobile = db.Column(db.String(11), nullable=False, server_default=db.FetchedValue())
+    sex = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue())
+    avatar = db.Column(db.String(200), nullable=False, server_default=db.FetchedValue())
+    salt = db.Column(db.String(32), nullable=False, server_default=db.FetchedValue())
+    reg_ip = db.Column(db.String(100), nullable=False, server_default=db.FetchedValue())
+    status = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue())
+    updated_time = db.Column(db.DateTime, nullable=False, server_default=db.FetchedValue())
+    created_time = db.Column(db.DateTime, nullable=False, server_default=db.FetchedValue())
+
+    # Establishing relationship
+    comments = db.relationship('MemberComments', backref='member', lazy=True)
+
+    @property
+    def status_desc(self):
+        status_mapping = {
+            "1": "正常",
+            "-1": "已删除"
+        }
+        return status_mapping[str(self.status)]
+
+    @property
+    def sex_desc(self):
+        sex_mapping = {
+            "0": "未知",
+            "1": "男",
+            "2": "女"
+        }
+        return sex_mapping[str(self.sex)]
+
+
+class MemberComments(db.Model):
+    __tablename__ = 'member_comments'
+
+    id = db.Column(db.Integer, primary_key=True, info='评论ID')
+    member_id = db.Column(db.Integer, db.ForeignKey('member.id'), nullable=False, index=True,
+                          server_default=db.FetchedValue(), info='会员ID')
+    cards_id = db.Column(db.Integer, db.ForeignKey('cards.id'), nullable=False, server_default=db.FetchedValue(),
+                         info='卡片ID')
+    pay_order_id = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue(), info='支付订单ID')
+    score = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue(), info='评分（0到10）')
+    content = db.Column(db.String(200), nullable=False, server_default=db.FetchedValue(), info='评论内容')
+    created_time = db.Column(db.DateTime, nullable=False, server_default=db.FetchedValue(), info='评论创建时间')
+
+    @property
+    def score_desc(self):
+        score_map = {
+            "10": "好评",
+            "6": "中评",
+            "0": "差评",
+        }
+        return score_map[str(self.score)]
