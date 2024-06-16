@@ -87,6 +87,29 @@ class Member(db.Model):
         return sex_mapping[str(self.sex)]
 
 
+class MemberAddress(db.Model):
+    __tablename__ = 'member_address'
+    __table_args__ = (
+        db.Index('idx_member_id_status', 'member_id', 'status'),
+    )
+
+    id = db.Column(db.Integer, primary_key=True)
+    member_id = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue())
+    nickname = db.Column(db.String(20), nullable=False, server_default=db.FetchedValue())
+    mobile = db.Column(db.String(11), nullable=False, server_default=db.FetchedValue())
+    province_id = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue())
+    province_str = db.Column(db.String(50), nullable=False, server_default=db.FetchedValue())
+    city_id = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue())
+    city_str = db.Column(db.String(50), nullable=False, server_default=db.FetchedValue())
+    area_id = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue())
+    area_str = db.Column(db.String(50), nullable=False, server_default=db.FetchedValue())
+    address = db.Column(db.String(100), nullable=False, server_default=db.FetchedValue())
+    status = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue())
+    is_default = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue())
+    updated_time = db.Column(db.DateTime, nullable=False, server_default=db.FetchedValue())
+    created_time = db.Column(db.DateTime, nullable=False, server_default=db.FetchedValue())
+
+
 class MemberComments(db.Model):
     __tablename__ = 'member_comments'
 
@@ -108,3 +131,116 @@ class MemberComments(db.Model):
             "0": "差评",
         }
         return score_map[str(self.score)]
+
+
+class PayOrder(db.Model):
+    __tablename__ = 'pay_order'
+    __table_args__ = (
+        db.Index('idx_member_id_status', 'member_id', 'status'),
+    )
+
+    id = db.Column(db.Integer, primary_key=True)
+    order_sn = db.Column(db.String(40), nullable=False, unique=True, server_default=db.FetchedValue())
+    member_id = db.Column(db.BigInteger, nullable=False, server_default=db.FetchedValue())
+    total_price = db.Column(db.Numeric(10, 2), nullable=False, server_default=db.FetchedValue())
+    yun_price = db.Column(db.Numeric(10, 2), nullable=False, server_default=db.FetchedValue())
+    pay_price = db.Column(db.Numeric(10, 2), nullable=False, server_default=db.FetchedValue())
+    pay_sn = db.Column(db.String(128), nullable=False, server_default=db.FetchedValue())
+    prepay_id = db.Column(db.String(128), nullable=False, server_default=db.FetchedValue())
+    note = db.Column(db.Text, nullable=False)
+    status = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue())
+    express_status = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue())
+    express_address_id = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue())
+    express_info = db.Column(db.String(100), nullable=False, server_default=db.FetchedValue())
+    comment_status = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue())
+    pay_time = db.Column(db.DateTime, nullable=False, server_default=db.FetchedValue())
+    updated_time = db.Column(db.DateTime, nullable=False, server_default=db.FetchedValue())
+    created_time = db.Column(db.DateTime, nullable=False, server_default=db.FetchedValue())
+
+    @property
+    def pay_status(self):
+        tmp_status = self.status
+        if self.status == 1:
+            tmp_status = self.express_status
+            if self.express_status == 1 and self.comment_status == 0:
+                tmp_status = -5
+            if self.express_status == 1 and self.comment_status == 1:
+                tmp_status = 1
+        return tmp_status
+
+    @property
+    def status_desc(self):
+        pay_status_display_mapping = {
+            "0": "订单关闭",
+            "1": "支付成功",
+            "-8": "待支付",
+            "-7": "待发货",
+            "-6": "待确认",
+            "-5": "待评价"
+        }
+        return pay_status_display_mapping[str(self.pay_status)]
+
+    @property
+    def order_number(self):
+        order_number = self.created_time.strftime("%Y%m%d%H%M%S")
+        order_number = order_number + str(self.id).zfill(5)
+        return order_number
+
+
+class PayOrderItem(db.Model):
+    __tablename__ = 'pay_order_item'
+
+    id = db.Column(db.Integer, primary_key=True)
+    pay_order_id = db.Column(db.Integer, nullable=False, index=True, server_default=db.FetchedValue())
+    member_id = db.Column(db.BigInteger, nullable=False, server_default=db.FetchedValue())
+    quantity = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue())
+    price = db.Column(db.Numeric(10, 2), nullable=False, server_default=db.FetchedValue())
+    cards_id = db.Column(db.Integer, nullable=False, index=True, server_default=db.FetchedValue())
+    note = db.Column(db.Text, nullable=False)
+    status = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue())
+    updated_time = db.Column(db.DateTime, nullable=False, server_default=db.FetchedValue())
+    created_time = db.Column(db.DateTime, nullable=False, server_default=db.FetchedValue())
+
+
+class StatDailySite(db.Model):
+    __tablename__ = 'stat_daily_site'
+
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.Date, nullable=False, index=True)
+    total_pay_money = db.Column(db.Numeric(10, 2), nullable=False, server_default=db.FetchedValue())
+    total_member_count = db.Column(db.Integer, nullable=False)
+    total_new_member_count = db.Column(db.Integer, nullable=False)
+    total_order_count = db.Column(db.Integer, nullable=False)
+    total_shared_count = db.Column(db.Integer, nullable=False)
+    updated_time = db.Column(db.DateTime, nullable=False, server_default=db.FetchedValue())
+    created_time = db.Column(db.DateTime, nullable=False, server_default=db.FetchedValue())
+
+
+class StatDailyMember(db.Model):
+    __tablename__ = 'stat_daily_member'
+    __table_args__ = (
+        db.Index('idx_date_member_id', 'date', 'member_id'),
+    )
+
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.Date, nullable=False)
+    member_id = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue())
+    total_shared_count = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue())
+    total_pay_money = db.Column(db.Numeric(10, 2), nullable=False, server_default=db.FetchedValue())
+    updated_time = db.Column(db.DateTime, nullable=False, server_default=db.FetchedValue())
+    created_time = db.Column(db.DateTime, nullable=False, server_default=db.FetchedValue())
+
+
+class StatDailyCards(db.Model):
+    __tablename__ = 'stat_daily_food'
+    __table_args__ = (
+        db.Index('date_cards_id', 'date', 'cards_id'),
+    )
+
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.Date, nullable=False)
+    cards_id = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue())
+    total_count = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue())
+    total_pay_money = db.Column(db.Numeric(10, 2), nullable=False, server_default=db.FetchedValue())
+    updated_time = db.Column(db.DateTime, nullable=False, server_default=db.FetchedValue())
+    created_time = db.Column(db.DateTime, nullable=False, server_default=db.FetchedValue())

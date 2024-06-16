@@ -33,11 +33,7 @@
                 {% for item in list %}
             <tr>
                 <td>{{ item.order_number }}</td>
-                <td>
-                    {% for item_food in item.foods %}
-                        {{ item_food.name }}  × {{ item_food.quantity }}
-                    {% endfor %}
-                </td>
+                <td>{{ item.name }}</td>
                 <td>{{ item.price }}</td>
                 <td>{{ item.pay_time }}</td>
                 <td>{{ item.status_desc }}</td>
