@@ -1,9 +1,20 @@
-# 文件共享服务
+# 卡券管理后台
+项目技术栈：flask + jquery
 
-后台界面图
-![图片](./web/static/images/1.png)
+仪表盘界面图
+![图片](./web/static/images/仪表盘.png)
 
-生成 orm 
-```python
-flask-sqlacodegen mysql://root:123456@127.0.0.1:3306/file_server?charset=utf8mb4 --outfile "common/models/Model.py"  --flask
-```
+会员列表界面图
+![图片](./web/static/images/会员列表.png)
+
+卡券管理界面图
+![图片](./web/static/images/卡券管理.png)
+
+统计管理界面图
+![图片](./web/static/images/统计管理.png)
+
+财务统计界面图
+![图片](./web/static/images/财务统计.png)
+
+账号管理界面图
+![图片](./web/static/images/账号管理.png)
