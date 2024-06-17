@@ -232,7 +232,7 @@ class StatDailyMember(db.Model):
 
 
 class StatDailyCards(db.Model):
-    __tablename__ = 'stat_daily_food'
+    __tablename__ = 'stat_daily_cards'
     __table_args__ = (
         db.Index('date_cards_id', 'date', 'cards_id'),
     )
