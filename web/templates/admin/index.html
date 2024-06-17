@@ -6,11 +6,11 @@
                     <div class="ibox float-e-margins">
                         <div class="ibox-title">
                             <span class="label label-primary pull-right">日统计</span>
-                            <h5>卡券总数</h5>
+                            <h5>营收概况</h5>
                         </div>
                         <div class="ibox-content">
-                            <h1 class="no-margins">1000</h1>
-                            <small>近7日新增：100</small>
+                            <h1 class="no-margins">{{ data.finance.today }}</h1>
+                            <small>近30日：{{ data.finance.month }}</small>
                         </div>
                     </div>
                 </div>
@@ -18,11 +18,11 @@
                     <div class="ibox float-e-margins">
                         <div class="ibox-title">
                             <span class="label label-primary pull-right">日统计</span>
-                            <h5>提货总数</h5>
+                            <h5>订单</h5>
                         </div>
                         <div class="ibox-content">
-                            <h1 class="no-margins">500</h1>
-                            <small>近7日新增：10</small>
+                            <h1 class="no-margins">{{ data.order.today }}</h1>
+                            <small>近30日：{{ data.order.today }}</small>
                         </div>
                     </div>
                 </div>
@@ -33,8 +33,9 @@
                             <h5>会员</h5>
                         </div>
                         <div class="ibox-content">
-                            <h1 class="no-margins">10000</h1>
-                            <small>近7日新增：10</small>
+                            <h1 class="no-margins">{{ data.member.total }}</h1>
+                            <small>今日新增：{{ data.member.today_new }}</small>
+                            <small>近30日新增：{{ data.member.month_new }}</small>
                         </div>
                     </div>
                 </div>
@@ -42,11 +43,11 @@
                     <div class="ibox float-e-margins">
                         <div class="ibox-title">
                             <span class="label label-primary pull-right">日统计</span>
-                            <h5>收益</h5>
+                            <h5>分享</h5>
                         </div>
                         <div class="ibox-content">
-                            <h1 class="no-margins">100000</h1>
-                            <small>近7日新增：10</small>
+                            <h1 class="no-margins">{{ data.shared.today }}</h1>
+                            <small>近30日：{{ data.shared.month }}</small>
                         </div>
                     </div>
                 </div>

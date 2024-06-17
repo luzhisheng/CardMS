@@ -1,15 +1,16 @@
 ;
 var stat_member_ops = {
-    init:function(){
+    init: function () {
         this.eventBind();
+        this.drawChart();
         this.datetimepickerComponent();
     },
-    eventBind:function(){
-        $("#search_form_wrap .search").click( function(){
+    eventBind: function () {
+        $("#search_form_wrap .search").click(function () {
             $("#search_form_wrap").submit();
         });
     },
-    datetimepickerComponent:function() {
+    datetimepickerComponent: function () {
         var that = this;
         $.datetimepicker.setLocale('zh');
         params = {
@@ -26,9 +27,19 @@ var stat_member_ops = {
         };
         $('#search_form_wrap input[name=date_from]').datetimepicker(params);
         $('#search_form_wrap input[name=date_to]').datetimepicker(params);
+    },
+    drawChart: function () {
+        charts_ops.setOption();
+        $.ajax({
+            url: common_ops.buildUrl("/chart/member"),
+            dataType: 'json',
+            success: function (res) {
+                charts_ops.drawLine($('#container'), res.data)
+            }
+        });
     }
 };
 
-$(document).ready( function(){
+$(document).ready(function () {
     stat_member_ops.init();
 });
