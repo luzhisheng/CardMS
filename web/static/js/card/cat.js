@@ -6,7 +6,7 @@ var food_cat_ops = {
     eventBind:function(){
         var that = this;
 
-        $(".wrap_search select[name=status]").change(function(){
+        $(".wrap_search .search").click(function(){
             $(".wrap_search").submit();
         });
 
@@ -22,7 +22,7 @@ var food_cat_ops = {
         var callback = {
             'ok':function(){
                 $.ajax({
-                    url:common_ops.buildUrl( "/cards/cat-ops" ),
+                    url:common_ops.buildUrl( "/card/cat-ops" ),
                     type:'POST',
                     data:{
                         act:act,

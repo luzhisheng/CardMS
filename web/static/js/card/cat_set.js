@@ -36,7 +36,7 @@ var food_cat_set_ops = {
             };
 
             $.ajax({
-                url:common_ops.buildUrl( "/cards/cat-set" ),
+                url:common_ops.buildUrl( "/card/cat-set" ),
                 type:'POST',
                 data:data,
                 dataType:'json',
@@ -45,7 +45,7 @@ var food_cat_set_ops = {
                     var callback = null;
                     if( res.code == 200 ){
                         callback = function(){
-                            window.location.href = common_ops.buildUrl("/cards/cat");
+                            window.location.href = common_ops.buildUrl("/card/cat");
                         }
                     }
                     common_ops.alert( res.msg,callback );

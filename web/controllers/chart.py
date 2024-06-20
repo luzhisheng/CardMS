@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify
 from common.libs.Helper import getFormatDate
 from common.models.Model import StatDailySite
 from common.models.Model import StatDailyMember
-from common.models.Model import StatDailyCards
+from common.models.Model import StatDailyCard
 import datetime
 
 route_chart = Blueprint('chart_page', __name__)
@@ -144,8 +144,8 @@ def cards():
     date_from = getFormatDate(date=date_before_30days, format="%Y-%m-%d")
     date_to = getFormatDate(date=now, format="%Y-%m-%d")
 
-    list = StatDailyCards.query.filter(StatDailyCards.date >= date_from) \
-        .filter(StatDailyCards.date <= date_to).order_by(StatDailyCards.id.asc()) \
+    list = StatDailyCard.query.filter(StatDailyCard.date >= date_from) \
+        .filter(StatDailyCard.date <= date_to).order_by(StatDailyCard.id.asc()) \
         .all()
 
     resp = {'code': 200, 'msg': '操作成功~~', 'data': {}}

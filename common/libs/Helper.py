@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from flask import g, render_template
 import datetime
 

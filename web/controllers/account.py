@@ -1,7 +1,7 @@
 from flask import Blueprint, request, redirect, g, jsonify
-from web.controllers.helper import opt_render, gen_pwd, gene_auth_code
+from web.controllers.helper import opt_render, gen_pwd
 from common.models.Model import User
-from web.controllers.helper import iPagination
+from web.controllers.helper import iPagination, generate_random_number
 from sqlalchemy import or_
 from application import db
 
@@ -60,10 +60,24 @@ def set():
     if request.method == "GET":
         if request.values.get('id'):
             user_info = User.query.filter_by(uid=request.values.get('id')).first()
-            rep = {"user_info": user_info}
+            rep = {
+                "user_info": user_info,
+                'sex_mapping': {
+                    "0": "没填写",
+                    "1": "男",
+                    "2": "女"
+                }
+            }
             return opt_render('account/set.html', rep)
         else:
-            rep = {"user_info": ''}
+            rep = {
+                "user_info": "",
+                'sex_mapping': {
+                    "0": "没填写",
+                    "1": "男",
+                    "2": "女"
+                }
+            }
             return opt_render('account/set.html', rep)
     elif request.method == "POST":
         resp = {
@@ -114,9 +128,10 @@ def set():
         else:
             # 新增数据
             user_info = User()
+        login_salt = generate_random_number()
         user_info.nickname = nickname
-        user_info.login_pwd = gen_pwd(login_pwd, 12345678)
-        user_info.login_salt = 12345678
+        user_info.login_pwd = gen_pwd(login_pwd, login_salt)
+        user_info.login_salt = login_salt
         user_info.mobile = mobile
         user_info.email = email
         user_info.sex = sex

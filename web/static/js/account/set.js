@@ -20,7 +20,7 @@ var account_set_ops = {
             var email_target = $(".wrap_account_set input[name=email]");
             var email = email_target.val()
 
-            var sex_target = $(".wrap_account_set input[name=sex]");
+            var sex_target = $(".wrap_account_set select[name=sex]");
             var sex = sex_target.val();
 
             var login_name_target = $(".wrap_account_set input[name=login_name]");

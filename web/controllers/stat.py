@@ -3,10 +3,10 @@ from web.controllers.helper import opt_render
 from application import app
 from common.libs.Helper import getFormatDate, iPagination, getDictFilterField, selectFilterObj
 from common.models.Model import StatDailySite
-from common.models.Model import StatDailyCards
+from common.models.Model import StatDailyCard
 from common.models.Model import StatDailyMember
 from common.models.Model import Member
-from common.models.Model import Cards
+from common.models.Model import Card
 import datetime
 
 route_stat = Blueprint("stat_page", __name__)
@@ -61,7 +61,7 @@ def cards():
     page = int(req['p']) if ('p' in req and req['p']) else 1
     date_from = req['date_from'] if req.get('date_from') else default_date_from
     date_to = req['date_to'] if req.get('date_to') else default_date_to
-    query = StatDailyCards.query.filter(StatDailyCards.date >= date_from).filter(StatDailyCards.date <= date_to)
+    query = StatDailyCard.query.filter(StatDailyCard.date >= date_from).filter(StatDailyCard.date <= date_to)
 
     page_params = {
         'total': query.count(),
@@ -74,10 +74,10 @@ def cards():
     pages = iPagination(page_params)
     offset = (page - 1) * 20
 
-    list = query.order_by(StatDailyCards.id.desc()).offset(offset).limit(20).all()
+    list = query.order_by(StatDailyCard.id.desc()).offset(offset).limit(20).all()
     date_list = []
     if list:
-        food_map = getDictFilterField(Cards, Cards.id, "id", selectFilterObj(list, "food_id"))
+        food_map = getDictFilterField(Card, Card.id, "id", selectFilterObj(list, "food_id"))
         for item in list:
             tmp_food_info = food_map[item.cards_id] if item.cards_id in food_map else {}
             tmp_data = {

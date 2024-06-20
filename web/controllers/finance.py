@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 from web.controllers.helper import opt_render
-from common.models.Model import Member, Cards, PayOrder, PayOrderItem
+from common.models.Model import Member, Card, PayOrder, PayOrderItem
 from application import app, db
 from web.controllers.helper import iPagination
 from sqlalchemy import func
@@ -15,9 +15,9 @@ def index():
     page = int(req['p']) if ('p' in req and req['p']) else 1
 
     # 查询订单并连接卡券表和价格表
-    query = db.session.query(PayOrderItem, PayOrder, Cards) \
+    query = db.session.query(PayOrderItem, PayOrder, Card) \
         .join(PayOrder, PayOrderItem.pay_order_id == PayOrder.id) \
-        .join(Cards, PayOrderItem.cards_id == Cards.id)
+        .join(Card, PayOrderItem.cards_id == Card.id)
 
     if 'status' in req and int(req['status']) >= -8 and int(req['status']) != -1:
         query = query.filter(PayOrder.status == int(req['status']))

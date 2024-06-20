@@ -14,15 +14,24 @@ var member_set_ops = {
             var nickname_target = $(".wrap_member_set input[name=nickname]");
             var nickname = nickname_target.val();
 
+            var mobile_target = $(".wrap_member_set input[name=mobile]");
+            var mobile = mobile_target.val();
+
             if( nickname.length < 1 ){
                 common_ops.tip( "请输入符合规范的姓名",nickname_target );
                 return;
+            }
+
+            if( mobile.length < 1 ){
+                common_ops.tip( "请输入符合规范的手机号码~~",mobile_target );
+                return false;
             }
 
             btn_target.addClass("disabled");
 
             var data = {
                 nickname:nickname,
+                mobile: mobile,
                 id:$(".wrap_member_set input[name=id]").val()
             };
 

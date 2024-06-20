@@ -1,5 +1,5 @@
 ;
-var food_index_ops = {
+var card_index_ops = {
     init:function(){
         this.eventBind();
     },
@@ -21,7 +21,7 @@ var food_index_ops = {
         var callback = {
             'ok':function(){
                 $.ajax({
-                    url:common_ops.buildUrl("/cards/ops"),
+                    url:common_ops.buildUrl("/card/ops"),
                     type:'POST',
                     data:{
                         act:act,
@@ -46,5 +46,5 @@ var food_index_ops = {
 };
 
 $(document).ready( function(){
-    food_index_ops.init();
+    card_index_ops.init();
 });

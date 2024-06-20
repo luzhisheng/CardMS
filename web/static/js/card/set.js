@@ -118,7 +118,7 @@ var food_set_ops = {
             };
 
             $.ajax({
-                url: common_ops.buildUrl("/cards/set"),
+                url: common_ops.buildUrl("/card/set"),
                 type: 'POST',
                 data: data,
                 dataType: 'json',
@@ -127,7 +127,7 @@ var food_set_ops = {
                     var callback = null;
                     if (res.code == 200) {
                         callback = function () {
-                            window.location.href = common_ops.buildUrl("/cards/index");
+                            window.location.href = common_ops.buildUrl("/card/index");
                         }
                     }
                     common_ops.alert(res.msg, callback);

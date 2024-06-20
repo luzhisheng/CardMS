@@ -1,6 +1,7 @@
 from flask import g, render_template
 import hashlib
 import base64
+import random
 
 
 # 密码加密
@@ -9,6 +10,16 @@ def gen_pwd(pwd, salt):
     str = f"{base64.encodebytes(pwd.encode('utf-8'))}-{salt}"
     m.update(str.encode("utf-8"))
     return m.hexdigest()
+
+
+def generate_random_number(length=4):
+    """
+    生成指定长度的随机数字字符串，默认长度为4.
+
+    :param length: int, 随机数字字符串的长度
+    :return: str, 生成的随机数字字符串
+    """
+    return "salt" + ''.join([str(random.randint(0, 9)) for _ in range(length)])
 
 
 # cookie加密
@@ -73,3 +84,19 @@ def iPagination(params):
     ret['total'] = total
     ret['range'] = range(ret['from'], ret['end'] + 1)
     return ret
+
+
+def is_integer(value):
+    """
+    判断是为int类型
+    """
+    try:
+        int_value = int(value)
+        return True
+    except (ValueError, TypeError):
+        return False
+
+
+def build_image_url(image_path):
+    # 图片地址
+    return f'/static/upload/{image_path}'
