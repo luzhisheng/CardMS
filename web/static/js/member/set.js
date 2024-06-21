@@ -5,7 +5,7 @@
         if (!file_key) {
             return;
         }
-        var html = '<img src="' + common_ops.buildPicUrl(file_key) + '"/>' + '<span class="fa fa-times-circle del del_image" data="' + file_key + '"></span>';
+        var html = '<img src="' + common_ops.buildPicUrl('member/' + file_key) + '"/>' + '<span class="fa fa-times-circle del del_image" data="' + file_key + '"></span>';
         if ($(".upload_pic_wrap .pic-each").size() > 0) {
             $(".upload_pic_wrap .pic-each").html(html);
         } else {
@@ -54,7 +54,7 @@ var member_set_ops = {
             btn_target.addClass("disabled");
 
             var data = {
-                main_image: $(".wrap_member_set .pic-each .del_image").attr("data"),
+                avatar: $(".wrap_member_set .pic-each .del_image").attr("data"),
                 nickname: nickname,
                 mobile: mobile,
                 id: $(".wrap_member_set input[name=id]").val()

@@ -7,7 +7,7 @@ var upload = {
         if (!file_key) {
             return;
         }
-        var html = '<img src="' + common_ops.buildPicUrl(file_key) + '"/>'
+        var html = '<img src="' + common_ops.buildPicUrl( 'card/' + file_key) + '"/>'
                 + '<span class="fa fa-times-circle del del_image" data="' + file_key + '"></span>';
         if ($(".upload_pic_wrap .pic-each").size() > 0) {
             $(".upload_pic_wrap .pic-each").html(html);

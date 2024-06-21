@@ -97,6 +97,11 @@ def is_integer(value):
         return False
 
 
-def build_image_url(image_path):
-    # 图片地址
-    return f'/static/upload/{image_path}'
+def build_card_image_url(image_path):
+    # card 图片地址
+    return f'/static/upload/card/{image_path}'
+
+
+def build_member_image_url(image_path):
+    # member 图片地址
+    return f'/static/upload/member/{image_path}'

@@ -18,7 +18,7 @@
                 {% for item in list %}
             <tr>
                 <td>
-                    <img alt="image" class="img-circle" src="{{ item.avatar }}" style="width: 40px;height: 40px;">
+                    <img alt="image" class="img-circle" src="{{ buildImageUrl( item.avatar ) }}" style="width: 40px;height: 40px;">
                 </td>
                 <td>{{ item.nickname }}</td>
                 <td>{{ item.card_name }}</td>

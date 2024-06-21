@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, jsonify
 from web.controllers.helper import opt_render
 from common.models.Model import CardCat, Card
-from web.controllers.helper import iPagination, is_integer
+from web.controllers.helper import iPagination, is_integer, build_card_image_url
 from sqlalchemy import or_
 from application import db
 import re
@@ -22,11 +22,6 @@ def is_valid_integer_stock(stock_str):
         return True
     except ValueError:
         return False
-
-
-def build_image_url(image_path):
-    # 定义自定义过滤器
-    return f'/static/upload/{image_path}'
 
 
 @route_card.route("/index", methods=["GET", "POST"])
@@ -140,7 +135,7 @@ def set():
         if request.values.get('id'):
             cat_list = CardCat.query.filter_by(status=1).order_by(CardCat.weight.desc()).all()
             info = Card.query.filter_by(id=request.values.get('id')).first()
-            rep = {"info": info, "current": "index", "buildImageUrl": build_image_url, "cat_list": cat_list}
+            rep = {"info": info, "current": "index", "buildImageUrl": build_card_image_url, "cat_list": cat_list}
             return opt_render('card/set.html', rep)
         else:
             cat_list = CardCat.query.filter_by(status=1).order_by(CardCat.weight.desc()).all()
