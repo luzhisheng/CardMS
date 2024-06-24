@@ -10,6 +10,10 @@ route_admin = Blueprint("admin_page", __name__)
 
 @route_admin.route("/")
 def index():
+    """
+    仪表盘统计数据
+    :return:
+    """
     resp_data = {
         'data': {
             'finance': {
@@ -17,9 +21,8 @@ def index():
                 'month': 0
             },
             'member': {
-                'today_new': 0,
-                'month_new': 0,
-                'total': 0
+                'today': 0,
+                'month': 0
             },
             'order': {
                 'today': 0,
@@ -45,13 +48,12 @@ def index():
 
         for item in list:
             data['finance']['month'] += item.total_pay_money
-            data['member']['month_new'] += item.total_new_member_count
-            data['member']['total'] = item.total_member_count
+            data['member']['month'] = item.total_member_count
             data['order']['month'] += item.total_order_count
             data['shared']['month'] += item.total_shared_count
             if getFormatDate(date=item.date, format="%Y-%m-%d") == date_to:
                 data['finance']['today'] = item.total_pay_money
-                data['member']['today_new'] = item.total_new_member_count
+                data['member']['today'] = item.total_member_count
                 data['order']['today'] = item.total_order_count
                 data['shared']['today'] = item.total_shared_count
 

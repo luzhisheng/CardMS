@@ -77,9 +77,9 @@ def cards():
     list = query.order_by(StatDailyCard.id.desc()).offset(offset).limit(20).all()
     date_list = []
     if list:
-        food_map = getDictFilterField(Card, Card.id, "id", selectFilterObj(list, "food_id"))
+        food_map = getDictFilterField(Card, Card.id, "id", selectFilterObj(list, "card_id"))
         for item in list:
-            tmp_food_info = food_map[item.cards_id] if item.cards_id in food_map else {}
+            tmp_food_info = food_map[item.card_id] if item.card_id in food_map else {}
             tmp_data = {
                 "date": item.date,
                 "total_count": item.total_count,
