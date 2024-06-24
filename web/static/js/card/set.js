@@ -14,10 +14,10 @@ var upload = {
         } else {
             $(".upload_pic_wrap").append('<span class="pic-each">' + html + '</span>');
         }
-        food_set_ops.delete_img();
+        card_set_ops.delete_img();
     }
 };
-var food_set_ops = {
+var card_set_ops = {
     init: function () {
         this.ue = null;
         this.eventBind();
@@ -160,5 +160,5 @@ var food_set_ops = {
 };
 
 $(document).ready(function () {
-    food_set_ops.init();
+    card_set_ops.init();
 });

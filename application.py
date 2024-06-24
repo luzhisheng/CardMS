@@ -21,6 +21,9 @@ app = Application(
     template_folder=os.getcwd() + "/web/templates/"
 )
 
-# 函数模板 模板调用flask方法
+# 全局函数 网页模板语法
+app.add_template_global(UrlManager.buildMemberImageUrl, 'buildMemberImageUrl')
+app.add_template_global(UrlManager.buildCardImageUrl, 'buildCardImageUrl')
+app.add_template_global(UrlManager.buildAccountImageUrl, 'buildAccountImageUrl')
 app.add_template_global(UrlManager.buildStaticUrl, 'buildStaticUrl')
 app.add_template_global(UrlManager.buildUrl, 'buildUrl')

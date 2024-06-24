@@ -98,6 +98,11 @@ def is_integer(value):
         return False
 
 
+def build_account_image_url(image_path):
+    # account 管理员图片地址
+    return f'/static/upload/account/{image_path}'
+
+
 def build_card_image_url(image_path):
     # card 图片地址
     return f'/static/upload/card/{image_path}'

@@ -80,7 +80,7 @@ def set():
         avatar = request.values.get('avatar')
         if avatar is None:
             resp['code'] = -1
-            resp['msg'] = "请输入符合规范的封面图~~"
+            resp['msg'] = "请输入符合规范的头像~~"
             return jsonify(resp)
         if request.values.get('id'):
             # 修改数据

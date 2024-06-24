@@ -1,7 +1,7 @@
 from flask import Blueprint, request, redirect, g, jsonify
 from web.controllers.helper import opt_render, gen_pwd
 from common.models.Model import User
-from web.controllers.helper import iPagination, generate_random_number
+from web.controllers.helper import iPagination, generate_random_number, build_account_image_url
 from sqlalchemy import or_
 from application import db
 
@@ -47,6 +47,7 @@ def index():
         'user_list': user_list,
         'pages': pages,
         'search_con': request.values,
+        'buildImageUrl': build_account_image_url,
         'status_mapping': {
             "1": "正常",
             "-1": "已删除"
@@ -62,16 +63,7 @@ def set():
             user_info = User.query.filter_by(uid=request.values.get('id')).first()
             rep = {
                 "user_info": user_info,
-                'sex_mapping': {
-                    "0": "没填写",
-                    "1": "男",
-                    "2": "女"
-                }
-            }
-            return opt_render('account/set.html', rep)
-        else:
-            rep = {
-                "user_info": "",
+                'buildImageUrl': build_account_image_url,
                 'sex_mapping': {
                     "0": "没填写",
                     "1": "男",
@@ -85,6 +77,12 @@ def set():
             'msg': "新增用户成功",
             "data": {}
         }
+        avatar = request.values.get('avatar')
+        if avatar is None:
+            resp['code'] = -1
+            resp['msg'] = "请输入符合规范的头像~~"
+            return jsonify(resp)
+
         nickname = request.values.get('nickname')
         if nickname is None or len(nickname) < 1:
             resp['code'] = -1
@@ -129,6 +127,7 @@ def set():
             # 新增数据
             user_info = User()
         login_salt = generate_random_number()
+        user_info.avatar = avatar
         user_info.nickname = nickname
         user_info.login_pwd = gen_pwd(login_pwd, login_salt)
         user_info.login_salt = login_salt

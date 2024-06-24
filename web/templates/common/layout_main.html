@@ -52,12 +52,12 @@
                 <ul class="nav navbar-top-links navbar-right">
                     <li>
 						<span class="m-r-sm text-muted welcome-message">
-                            后台管理系统
+                            {{ current_user.nickname }}
                         </span>
                     </li>
                     <li class="dropdown user_info">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);">
-                            <img alt="image" class="img-circle" src="{{ buildStaticUrl('/images/common/avatar.png') }}"/>
+                            <img alt="image" class="img-circle" src="{% if current_user.avatar %}{{ buildAccountImageUrl(current_user.avatar) }}{% else %}{{ buildStaticUrl('/images/common/avatar.png') }}{% endif %}"/>
                         </a>
                         <ul class="dropdown-menu dropdown-messages">
                             <li>

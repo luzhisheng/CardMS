@@ -1,12 +1,36 @@
 ;
-var account_set_ops = {
-    init:function(){
-        this.eventBind();
+var upload = {
+    error: function (msg) {
+        common_ops.alert(msg);
     },
-    eventBind:function(){
-        $(".wrap_account_set .save").click(function(){
+    success: function (file_key) {
+        if (!file_key) {
+            return;
+        }
+        var html = '<img src="' + common_ops.buildPicUrl('account/' + file_key) + '"/>'
+            + '<span class="fa fa-times-circle del del_image" data="' + file_key + '"></span>';
+        if ($(".upload_pic_wrap .pic-each").size() > 0) {
+            $(".upload_pic_wrap .pic-each").html(html);
+        } else {
+            $(".upload_pic_wrap").append('<span class="pic-each">' + html + '</span>');
+        }
+        account_set_ops.delete_img();
+    }
+};
+var account_set_ops = {
+    init: function () {
+        this.eventBind();
+        this.delete_img();
+    },
+    eventBind: function () {
+
+        $(".wrap_account_set .upload_pic_wrap input[name=pic]").change(function () {
+            $(".wrap_account_set .upload_pic_wrap").submit();
+        });
+
+        $(".wrap_account_set .save").click(function () {
             var btn_target = $(this);
-            if( btn_target.hasClass("disabled") ){
+            if (btn_target.hasClass("disabled")) {
                 common_ops.alert("正在处理!!请不要重复提交~~");
                 return;
             }
@@ -29,70 +53,81 @@ var account_set_ops = {
             var login_pwd_target = $(".wrap_account_set input[name=login_pwd]");
             var login_pwd = login_pwd_target.val();
 
-            if( nickname.length < 1 ){
-                common_ops.tip( "请输入符合规范的姓名~~",nickname_target );
+            if ($(".wrap_account_set .pic-each").size() < 1) {
+                common_ops.alert("请上传头像~~");
+                return;
+            }
+
+            if (nickname.length < 1) {
+                common_ops.tip("请输入符合规范的姓名~~", nickname_target);
                 return false;
             }
 
-            if( mobile.length < 1 ){
-                common_ops.tip( "请输入符合规范的手机号码~~",mobile_target );
+            if (mobile.length < 1) {
+                common_ops.tip("请输入符合规范的手机号码~~", mobile_target);
                 return false;
             }
 
-            if(  email.length < 1 ){
-                common_ops.tip( "请输入符合规范的邮箱~~",email_target );
+            if (email.length < 1) {
+                common_ops.tip("请输入符合规范的邮箱~~", email_target);
                 return false;
             }
 
-            if(  sex.length !== 1 ){
-                common_ops.tip( "请输入符合规范的性别~~",sex_target );
+            if (sex.length !== 1) {
+                common_ops.tip("请输入符合规范的性别~~", sex_target);
                 return false;
             }
 
-            if( login_name.length < 1 ){
-                common_ops.tip( "请输入符合规范的登录用户名~~",login_name_target );
+            if (login_name.length < 1) {
+                common_ops.tip("请输入符合规范的登录用户名~~", login_name_target);
                 return false;
             }
 
-            if( login_pwd.length < 6 ){
-                common_ops.tip( "请输入符合规范的登录密码~~",login_pwd_target );
+            if (login_pwd.length < 6) {
+                common_ops.tip("请输入符合规范的登录密码~~", login_pwd_target);
                 return false;
             }
 
             btn_target.addClass("disabled");
 
             var data = {
+                avatar: $(".wrap_account_set .pic-each .del_image").attr("data"),
                 nickname: nickname,
                 mobile: mobile,
                 email: email,
                 sex: sex,
-                login_name:login_name,
-                login_pwd:login_pwd,
-                id:$(".wrap_account_set input[name=id]").val()
+                login_name: login_name,
+                login_pwd: login_pwd,
+                id: $(".wrap_account_set input[name=id]").val()
             };
 
             $.ajax({
-                url:common_ops.buildUrl( "/account/set" ),
-                type:'POST',
-                data:data,
-                dataType:'json',
-                success:function( res ){
+                url: common_ops.buildUrl("/account/set"),
+                type: 'POST',
+                data: data,
+                dataType: 'json',
+                success: function (res) {
                     btn_target.removeClass("disabled");
                     var callback = null;
-                    if( res.code == 200 ){
-                        callback = function(){
+                    if (res.code == 200) {
+                        callback = function () {
                             window.location.href = common_ops.buildUrl("/account/index");
                         }
                     }
-                    common_ops.alert( res.msg,callback );
+                    common_ops.alert(res.msg, callback);
                 }
             });
 
 
         });
+    },
+    delete_img: function () {
+        $(".wrap_account_set .del_image").unbind().click(function () {
+            $(this).parent().remove();
+        });
     }
 };
 
-$(document).ready( function(){
+$(document).ready(function () {
     account_set_ops.init();
-} );
+});
