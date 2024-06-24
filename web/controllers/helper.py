@@ -2,6 +2,7 @@ from flask import g, render_template
 import hashlib
 import base64
 import random
+import re
 
 
 # 密码加密
@@ -105,3 +106,18 @@ def build_card_image_url(image_path):
 def build_member_image_url(image_path):
     # member 图片地址
     return f'/static/upload/member/{image_path}'
+
+
+def is_valid_price(price_str):
+    # 使用正则表达式检查价格格式是否正确
+    pattern = r'^\d+(\.\d{1,2})?$'
+    return re.match(pattern, price_str) is not None
+
+
+def is_valid_integer_stock(stock_str):
+    # 检查价格是否为有效的整数
+    try:
+        stock = int(stock_str)
+        return True
+    except ValueError:
+        return False

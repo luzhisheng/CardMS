@@ -133,6 +133,11 @@ class MemberAddress(db.Model):
     updated_time = db.Column(db.DateTime, nullable=False, server_default=db.FetchedValue(), info='更新时间')
     created_time = db.Column(db.DateTime, nullable=False, server_default=db.FetchedValue(), info='创建时间')
 
+    @property
+    def address_all(self):
+        address_all = self.province_str + self.city_str + self.area_str + self.address
+        return address_all
+
 
 class MemberComments(db.Model):
     """
@@ -187,28 +192,18 @@ class PayOrder(db.Model):
     updated_time = db.Column(db.DateTime, nullable=False, server_default=db.FetchedValue(), info='更新时间')
     created_time = db.Column(db.DateTime, nullable=False, server_default=db.FetchedValue(), info='创建时间')
 
-    @property
-    def pay_status(self):
-        tmp_status = self.status
-        if self.status == 1:
-            tmp_status = self.express_status
-            if self.express_status == 1 and self.comment_status == 0:
-                tmp_status = -5
-            if self.express_status == 1 and self.comment_status == 1:
-                tmp_status = 1
-        return tmp_status
+    pay_status_display_mapping = {
+        0: "订单关闭",
+        1: "支付成功",
+        -8: "待支付",
+        -7: "待发货",
+        -6: "待确认",
+        -5: "待评价"
+    }
 
     @property
     def status_desc(self):
-        pay_status_display_mapping = {
-            "0": "订单关闭",
-            "1": "支付成功",
-            "-8": "待支付",
-            "-7": "待发货",
-            "-6": "待确认",
-            "-5": "待评价"
-        }
-        return pay_status_display_mapping.get(str(self.pay_status), "未知状态")
+        return self.pay_status_display_mapping.get(self.status, "未知状态")
 
     @property
     def order_number(self):

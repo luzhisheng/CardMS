@@ -9,7 +9,7 @@
                     <select name="status" class="form-control inline">
                         <option value="-1">请选择状态</option>
                         {% for tmp_key in pay_status_mapping %}
-                        <option value="{{ tmp_key }}" {% if tmp_key == search_con['status']  %} selected {% endif %}>{{  pay_status_mapping[ tmp_key ] }}</option>
+                        <option value="{{ tmp_key }}" {% if tmp_key|string == search_con['status']|string  %} selected {% endif %}>{{  pay_status_mapping[ tmp_key ] }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -20,7 +20,6 @@
             <thead>
             <tr>
                 <th>订单编号</th>
-                <th>名称</th>
                 <th>价格</th>
                 <th>支付时间</th>
                 <th>状态</th>
@@ -33,8 +32,7 @@
                 {% for item in list %}
             <tr>
                 <td>{{ item.order_number }}</td>
-                <td>{{ item.name }}</td>
-                <td>{{ item.price }}</td>
+                <td>{{ item.total_price }}</td>
                 <td>{{ item.pay_time }}</td>
                 <td>{{ item.status_desc }}</td>
                 <td>{{ item.created_time }}</td>

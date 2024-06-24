@@ -1,27 +1,11 @@
-from flask import Blueprint, render_template, request, jsonify
+from flask import Blueprint, request, jsonify
 from web.controllers.helper import opt_render
 from common.models.Model import CardCat, Card
-from web.controllers.helper import iPagination, is_integer, build_card_image_url
+from web.controllers.helper import iPagination, is_integer, build_card_image_url, is_valid_integer_stock, is_valid_price
 from sqlalchemy import or_
 from application import db
-import re
 
 route_card = Blueprint("card_page", __name__)
-
-
-def is_valid_price(price_str):
-    # 使用正则表达式检查价格格式是否正确
-    pattern = r'^\d+(\.\d{1,2})?$'
-    return re.match(pattern, price_str) is not None
-
-
-def is_valid_integer_stock(stock_str):
-    # 检查价格是否为有效的整数
-    try:
-        stock = int(stock_str)
-        return True
-    except ValueError:
-        return False
 
 
 @route_card.route("/index", methods=["GET", "POST"])
@@ -309,5 +293,5 @@ def ops():
 @route_card.route("/info", methods=["GET"])
 def info():
     info = Card.query.filter_by(id=request.values.get('id')).first()
-    resp = {"info": info, "current": "index", "buildImageUrl": build_image_url}
+    resp = {"info": info, "current": "index", "buildImageUrl": build_card_image_url}
     return opt_render('card/info.html', resp)
