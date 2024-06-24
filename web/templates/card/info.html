@@ -24,7 +24,7 @@
                 <p>售价：{{ info.price }}</p>
                 <p>库存总量：{{ info.stock }}</p>
                 <p>图书标签：{{ info.tags }}</p>
-                <p>封面图：<img src="{{ buildImageUrl( info.main_image ) }}" style="width: 50px;height: 50px;"></p>
+                <p>封面图：<img src="{{ buildCardImageUrl( info.main_image ) }}" style="width: 50px;height: 50px;"></p>
                 <p>描述：</p>
                 <p>{{ info.summary | safe }}</p>
                 <p></p>

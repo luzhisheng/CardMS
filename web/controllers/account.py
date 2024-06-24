@@ -1,7 +1,7 @@
 from flask import Blueprint, request, redirect, g, jsonify
 from web.controllers.helper import opt_render, gen_pwd
 from common.models.Model import User
-from web.controllers.helper import iPagination, generate_random_number, build_account_image_url
+from web.controllers.helper import iPagination, generate_random_number
 from sqlalchemy import or_
 from application import db
 
@@ -47,7 +47,6 @@ def index():
         'user_list': user_list,
         'pages': pages,
         'search_con': request.values,
-        'buildImageUrl': build_account_image_url,
         'status_mapping': {
             "1": "正常",
             "-1": "已删除"
@@ -63,7 +62,6 @@ def set():
             user_info = User.query.filter_by(uid=request.values.get('id')).first()
             rep = {
                 "user_info": user_info,
-                'buildImageUrl': build_account_image_url,
                 'sex_mapping': {
                     "0": "没填写",
                     "1": "男",

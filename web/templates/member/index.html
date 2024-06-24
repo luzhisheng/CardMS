@@ -42,7 +42,7 @@
             {%  if list %}
                 {% for item in list %}
             <tr>
-                <td><img alt="image" class="img-circle" src="{{ buildImageUrl( item.avatar ) }}" style="width: 40px;height: 40px;"></td>
+                <td><img alt="image" class="img-circle" src="{{ buildMemberImageUrl( item.avatar ) }}" style="width: 40px;height: 40px;"></td>
                 <td>{{ item.nickname }}</td>
                 <td>{{ item.sex_desc }}</td>
                 <td>{{ item.mobile }}</td>

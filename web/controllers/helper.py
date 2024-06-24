@@ -98,21 +98,6 @@ def is_integer(value):
         return False
 
 
-def build_account_image_url(image_path):
-    # account 管理员图片地址
-    return f'/static/upload/account/{image_path}'
-
-
-def build_card_image_url(image_path):
-    # card 图片地址
-    return f'/static/upload/card/{image_path}'
-
-
-def build_member_image_url(image_path):
-    # member 图片地址
-    return f'/static/upload/member/{image_path}'
-
-
 def is_valid_price(price_str):
     # 使用正则表达式检查价格格式是否正确
     pattern = r'^\d+(\.\d{1,2})?$'

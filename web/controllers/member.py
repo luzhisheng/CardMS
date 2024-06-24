@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from web.controllers.helper import iPagination
 from common.models.Model import Member, MemberComments, Card
-from web.controllers.helper import opt_render, build_member_image_url
+from web.controllers.helper import opt_render
 from application import app, db
 
 route_member = Blueprint('member_page', __name__)
@@ -37,7 +37,6 @@ def index():
     resp_data['list'] = list
     resp_data['pages'] = pages
     resp_data['search_con'] = req
-    resp_data["buildImageUrl"] = build_member_image_url
     resp_data['status_mapping'] = {
         "1": "正常",
         "-1": "已删除"
@@ -52,8 +51,7 @@ def set():
         if request.values.get('id'):
             member_info = Member.query.filter_by(id=request.values.get('id')).first()
             rep = {
-                "info": member_info,
-                "buildImageUrl": build_member_image_url
+                "info": member_info
             }
             return opt_render('member/set.html', rep)
         else:
@@ -128,7 +126,7 @@ def cat_ops():
 @route_member.route("/info", methods=["GET"])
 def info():
     info = Member.query.filter_by(id=request.values.get('id')).first()
-    resp = {"info": info, "buildImageUrl": build_member_image_url}
+    resp = {"info": info}
     return opt_render('member/info.html', resp)
 
 
@@ -170,6 +168,5 @@ def comment():
 
     resp_data['list'] = data_list
     resp_data['pages'] = pages
-    resp_data["buildImageUrl"] = build_member_image_url
     resp_data['current'] = 'comment'
     return opt_render("member/comment.html", resp_data)

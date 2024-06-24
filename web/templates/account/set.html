@@ -16,7 +16,7 @@
                             </div>
                             {% if user_info and user_info.avatar %}
                                 <span class="pic-each">
-                            <img src="{{ buildImageUrl( user_info.avatar ) }}"/>
+                            <img src="{{ buildAccountImageUrl( user_info.avatar ) }}"/>
                             <span class="fa fa-times-circle del del_image" data="{{ user_info.avatar }}"></span>
                         </span>
                             {% endif %}

@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from web.controllers.helper import opt_render
 from common.models.Model import CardCat, Card
-from web.controllers.helper import iPagination, is_integer, build_card_image_url, is_valid_integer_stock, is_valid_price
+from web.controllers.helper import iPagination, is_integer, is_valid_integer_stock, is_valid_price
 from sqlalchemy import or_
 from application import db
 
@@ -119,7 +119,7 @@ def set():
         if request.values.get('id'):
             cat_list = CardCat.query.filter_by(status=1).order_by(CardCat.weight.desc()).all()
             info = Card.query.filter_by(id=request.values.get('id')).first()
-            rep = {"info": info, "current": "index", "buildImageUrl": build_card_image_url, "cat_list": cat_list}
+            rep = {"info": info, "current": "index", "cat_list": cat_list}
             return opt_render('card/set.html', rep)
         else:
             cat_list = CardCat.query.filter_by(status=1).order_by(CardCat.weight.desc()).all()
@@ -293,5 +293,5 @@ def ops():
 @route_card.route("/info", methods=["GET"])
 def info():
     info = Card.query.filter_by(id=request.values.get('id')).first()
-    resp = {"info": info, "current": "index", "buildImageUrl": build_card_image_url}
+    resp = {"info": info, "current": "index"}
     return opt_render('card/info.html', resp)

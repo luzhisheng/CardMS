@@ -54,7 +54,7 @@
                     {% for item in user_list %}
                         <tr>
                             <td><img alt="image" class="img-circle"
-                                     src="{% if item.avatar %}{{ buildImageUrl(item.avatar) }}{% else %}{{ buildStaticUrl('/images/common/avatar.png') }}{% endif %}"
+                                     src="{% if item.avatar %}{{ buildAccountImageUrl(item.avatar) }}{% else %}{{ buildStaticUrl('/images/common/avatar.png') }}{% endif %}"
                                      style="width: 40px;height: 40px;"/></td>
                             <td>{{ item.login_name }}</td>
                             <td>{{ item.nickname }}</td>
