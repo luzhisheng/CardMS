@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from web.controllers.helper import iPagination
 from common.models.Model import Member, MemberComments, Card
 from web.controllers.helper import opt_render
-from application import app, db
+from application import db
 
 route_member = Blueprint('member_page', __name__)
 

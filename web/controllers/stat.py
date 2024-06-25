@@ -1,6 +1,5 @@
 from flask import Blueprint, request
 from web.controllers.helper import opt_render
-from application import app
 from common.libs.Helper import getFormatDate, iPagination, getDictFilterField, selectFilterObj
 from common.models.Model import StatDailySite
 from common.models.Model import StatDailyCard

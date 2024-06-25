@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, jsonify
+from flask import Blueprint, request
 from common.libs.UploadService import UploadService
 
 route_upload = Blueprint("upload_page", __name__)

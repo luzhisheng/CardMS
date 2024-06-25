@@ -1,4 +1,3 @@
-from application import app, db
 from flask import Blueprint
 from common.libs.Helper import ops_render
 from common.libs.Helper import getFormatDate
