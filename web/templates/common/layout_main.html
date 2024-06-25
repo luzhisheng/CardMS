@@ -8,35 +8,39 @@
     <link href="{{ buildStaticUrl('/bootstrap/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ buildStaticUrl('/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
     <link href="{{ buildStaticUrl('/css/style.css') }}" rel="stylesheet">
-    {%block css %}{% endblock %}
+    {% block css %}{% endblock %}
 <body>
 <div id="wrapper">
     <nav class="navbar-default navbar-static-side" role="navigation">
         <div class="sidebar-collapse">
             <ul class="nav metismenu" id="side-menu">
                 <li class="default">
-                    <a href="{{ buildUrl('/admin') }}"><i class="fa fa-dashboard fa-lg"></i>
+                    <a href="{{ buildUrl('/admin') }}"><i class="fa fa-dashboard fa-lg fa-fw"></i>
                         <span class="nav-label">仪表盘</span></a>
                 </li>
                 <li class="account">
-                    <a href="{{ buildUrl('/account/index') }}"><i class="fa fa-user fa-lg"></i> <span
+                    <a href="{{ buildUrl('/account/index') }}"><i class="fa fa-user fa-lg fa-fw"></i> <span
                             class="nav-label">账号管理</span></a>
                 </li>
                 <li class="card">
-                    <a href="{{ buildUrl('/card/index') }}"><i class="fa fa-book fa-lg"></i> <span
+                    <a href="{{ buildUrl('/card/index') }}"><i class="fa fa-book fa-lg fa-fw"></i> <span
                             class="nav-label">卡券管理</span></a>
                 </li>
                 <li class="member">
-                    <a href="{{ buildUrl('/member/index') }}"><i class="fa fa-group fa-lg"></i> <span
+                    <a href="{{ buildUrl('/member/index') }}"><i class="fa fa-group fa-lg fa-fw"></i> <span
                             class="nav-label">会员列表</span></a>
                 </li>
                 <li class="finance">
-                    <a href="{{ buildUrl('/finance/index') }}"><i class="fa fa-rmb fa-lg"></i> <span
+                    <a href="{{ buildUrl('/finance/index') }}"><i class="fa fa-rmb fa-lg fa-fw"></i> <span
                             class="nav-label">财务管理</span></a>
                 </li>
                 <li class="stat">
-                    <a href="{{ buildUrl('/stat/index') }}"><i class="fa fa-bar-chart fa-lg"></i> <span
+                    <a href="{{ buildUrl('/stat/index') }}"><i class="fa fa-bar-chart fa-lg fa-fw"></i> <span
                             class="nav-label">统计管理</span></a>
+                </li>
+                <li class="sys">
+                    <a href="{{ buildUrl('/sys/index') }}"><i class="fa fa-cog fa-lg fa-fw"></i> <span
+                            class="nav-label">系统管理</span></a>
                 </li>
             </ul>
 
@@ -47,7 +51,8 @@
         <div class="row border-bottom">
             <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
                 <div class="navbar-header">
-                    <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="javascript:void(0);"><i class="fa fa-bars"></i> </a>
+                    <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="javascript:void(0);"><i
+                            class="fa fa-bars"></i> </a>
                 </div>
                 <ul class="nav navbar-top-links navbar-right">
                     <li>
@@ -57,7 +62,8 @@
                     </li>
                     <li class="dropdown user_info">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);">
-                            <img alt="image" class="img-circle" src="{% if current_user.avatar %}{{ buildAccountImageUrl(current_user.avatar) }}{% else %}{{ buildStaticUrl('/images/common/avatar.png') }}{% endif %}"/>
+                            <img alt="image" class="img-circle" src="
+                                    {% if current_user.avatar %}{{ buildAccountImageUrl(current_user.avatar) }}{% else %}{{ buildStaticUrl('/images/common/avatar.png') }}{% endif %}"/>
                         </a>
                         <ul class="dropdown-menu dropdown-messages">
                             <li>
@@ -101,6 +107,6 @@
 <script src="{{ buildStaticUrl('/bootstrap/bootstrap.min.js') }}"></script>
 <script src="{{ buildStaticUrl('/plugins/layer/layer.js') }}"></script>
 <script src="{{ buildStaticUrl('/js/common.js') }}"></script>
-{%block js %}{% endblock %}
+{% block js %}{% endblock %}
 </body>
 </html>
