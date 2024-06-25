@@ -96,6 +96,10 @@ var common_ops = {
             nav_name = "stat";
         }
 
+        if(  pathname.indexOf("/sys") > -1  ){
+            nav_name = "sys";
+        }
+
         if( nav_name == null ){
             return;
         }

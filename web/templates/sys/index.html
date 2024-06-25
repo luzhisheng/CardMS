@@ -1,0 +1,82 @@
+{% extends "common/layout_main.html" %}
+{% block content %}
+{% include "common/tab_sys.html" %}
+<div class="row">
+    <div class="col-lg-12">
+        <form class="form-inline wrap_search">
+            <div class="row  m-t p-w-m">
+                    <div class="form-group">
+                        <select name="account_type" class="form-control inline">
+                            <option value="">请选择类型</option>
+                            {% for tmp_key in account_type_mapping %}
+                                <option value="{{ tmp_key }}" {% if tmp_key | string == search_con['account_type'] %}
+                                        selected {% endif %}>{{ account_type_mapping[ tmp_key ] }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <select name="operation" class="form-control inline">
+                            <option value="">请选择操作</option>
+                            {% for tmp_key in operation_mapping %}
+                                <option value="{{ tmp_key }}" {% if tmp_key | string == search_con['operation'] %}
+                                        selected {% endif %}>{{ operation_mapping[tmp_key] }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input type="text" name="mix_kw" placeholder="请输入关键字" class="form-control" value=""
+                                   autocomplete="off">
+                            <input type="hidden" name="p" value="">
+                            <span class="input-group-btn">
+                            <button type="button" class="btn  btn-primary search">
+                                <i class="fa fa-search"></i>搜索
+                            </button>
+                        </span>
+                        </div>
+                    </div>
+                </div>
+        </form>
+        <hr>
+        <table class="table table-bordered m-t">
+            <thead>
+            <tr>
+                <th>登录用户名</th>
+                <th>账户ID/会员ID</th>
+                <th>账号类型：1-管理，2-会员</th>
+                <th>用户操作</th>
+                <th>请求方法</th>
+                <th>请求参数</th>
+                <th>执行时长(毫秒)</th>
+                <th>IP地址</th>
+                <th>日志记录时间</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% if list %}
+                {% for item in list %}
+            <tr>
+                <td>{{ item.nickname }}</td>
+                <td>{{ item.account_id }}</td>
+                <td>{{ item.account_type_desc }}</td>
+                <td>{{ item.operation_desc }}</td>
+                <td>{{ item.method }}</td>
+                <td>{{ item.params }}</td>
+                <td>{{ item.time }}</td>
+                <td>{{ item.ip }}</td>
+                <td>{{ item.created_time }}</td>
+            </tr>
+                {% endfor %}
+            {% else %}
+                <tr><td colspan="7">暂无数据~~</td></tr>
+            {% endif %}
+            </tbody>
+        </table>
+        <!--分页代码已被封装到统一模板文件中-->
+         {% include 'common/pagenation.html' %}
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+<script src="{{ buildStaticUrl('/js/sys/index.js') }}"></script>
+{% endblock %}

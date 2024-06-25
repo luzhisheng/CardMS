@@ -9,6 +9,7 @@ from web.controllers.finance import route_finance
 from web.controllers.stat import route_stat
 from web.controllers.upload import route_upload
 from web.controllers.chart import route_chart
+from web.controllers.sys import route_sys
 from application import app
 # 拦截器
 from web.controllers.auth_interceptor import *
@@ -35,3 +36,5 @@ app.register_blueprint(route_stat, url_prefix="/stat")
 app.register_blueprint(route_upload, url_prefix="/upload")
 # /route_upload 路径
 app.register_blueprint(route_chart, url_prefix="/chart")
+# /sys 路径
+app.register_blueprint(route_sys, url_prefix="/sys")

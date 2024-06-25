@@ -283,3 +283,47 @@ class StatDailyCard(db.Model):
     total_pay_money = db.Column(db.Numeric(10, 2), nullable=False, server_default=db.FetchedValue(), info='总支付金额')
     updated_time = db.Column(db.DateTime, nullable=False, server_default=db.FetchedValue(), info='更新时间')
     created_time = db.Column(db.DateTime, nullable=False, server_default=db.FetchedValue(), info='创建时间')
+
+
+class SysLog(db.Model):
+    """
+    系统日志表
+    """
+    __tablename__ = 'sys_logs'
+    __table_args__ = (
+        db.Index('idx_nickname_account_id', 'nickname', 'account_id'),
+    )
+
+    id = db.Column(db.BigInteger, primary_key=True, autoincrement=True, comment='统计ID')
+    nickname = db.Column(db.String(50), nullable=True, comment='登录用户名')
+    account_id = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue(), info='账户ID/会员ID')
+    account_type = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue(),
+                             info='账号类型：1-管理，2-会员')
+    operation = db.Column(db.String(50), nullable=True, comment='用户操作')
+    method = db.Column(db.String(200), nullable=True, comment='请求方法')
+    params = db.Column(db.String(5000), nullable=True, comment='请求参数')
+    time = db.Column(db.BigInteger, nullable=False, comment='执行时长(毫秒)')
+    ip = db.Column(db.String(64), nullable=True, comment='IP地址')
+    created_time = db.Column(db.DateTime, nullable=False, server_default=db.func.current_timestamp(),
+                             comment='日志记录时间')
+
+    account_type_mapping = {
+        1: "管理",
+        2: "会员"
+    }
+
+    @property
+    def account_type_desc(self):
+        return self.account_type_mapping.get(self.account_type, "未知类型")
+
+    operation_mapping = {
+        "login": "登陆",
+        "logout": "登出",
+        "view_profile": "查看资料",
+        "update_settings": "更新设置",
+        "purchase_item": "购买商品",
+    }
+
+    @property
+    def operation_desc(self):
+        return self.operation_mapping.get(self.operation, "未知类型")
