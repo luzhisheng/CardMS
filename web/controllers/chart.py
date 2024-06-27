@@ -12,8 +12,8 @@ route_chart = Blueprint('chart_page', __name__)
 def dashboard():
     now = datetime.datetime.now()
     date_before_30days = now + datetime.timedelta(days=-30)
-    date_from = getFormatDate(date=date_before_30days, format="%Y-%m-%d")
-    date_to = getFormatDate(date=now, format="%Y-%m-%d")
+    date_from = getFormatDate(date=date_before_30days, date_format="%Y-%m-%d")
+    date_to = getFormatDate(date=now, date_format="%Y-%m-%d")
 
     list = StatDailySite.query.filter(StatDailySite.date >= date_from) \
         .filter(StatDailySite.date <= date_to).order_by(StatDailySite.id.asc()) \
@@ -36,7 +36,7 @@ def dashboard():
 
     if list:
         for item in list:
-            data['categories'].append(getFormatDate(date=item.date, format="%Y-%m-%d"))
+            data['categories'].append(getFormatDate(date=item.date, date_format="%Y-%m-%d"))
             data['series'][0]['data'].append(item.total_member_count)
             data['series'][1]['data'].append(item.total_order_count)
 
@@ -48,8 +48,8 @@ def dashboard():
 def finance():
     now = datetime.datetime.now()
     date_before_30days = now + datetime.timedelta(days=-30)
-    date_from = getFormatDate(date=date_before_30days, format="%Y-%m-%d")
-    date_to = getFormatDate(date=now, format="%Y-%m-%d")
+    date_from = getFormatDate(date=date_before_30days, date_format="%Y-%m-%d")
+    date_to = getFormatDate(date=now, date_format="%Y-%m-%d")
 
     list = StatDailySite.query.filter(StatDailySite.date >= date_from) \
         .filter(StatDailySite.date <= date_to).order_by(StatDailySite.id.asc()) \
@@ -68,7 +68,7 @@ def finance():
 
     if list:
         for item in list:
-            data['categories'].append(getFormatDate(date=item.date, format="%Y-%m-%d"))
+            data['categories'].append(getFormatDate(date=item.date, date_format="%Y-%m-%d"))
             data['series'][0]['data'].append(float(item.total_pay_money))
 
     resp['data'] = data
@@ -79,8 +79,8 @@ def finance():
 def share():
     now = datetime.datetime.now()
     date_before_30days = now + datetime.timedelta(days=-30)
-    date_from = getFormatDate(date=date_before_30days, format="%Y-%m-%d")
-    date_to = getFormatDate(date=now, format="%Y-%m-%d")
+    date_from = getFormatDate(date=date_before_30days, date_format="%Y-%m-%d")
+    date_to = getFormatDate(date=now, date_format="%Y-%m-%d")
 
     list = StatDailySite.query.filter(StatDailySite.date >= date_from) \
         .filter(StatDailySite.date <= date_to).order_by(StatDailySite.id.asc()) \
@@ -99,7 +99,7 @@ def share():
 
     if list:
         for item in list:
-            data['categories'].append(getFormatDate(date=item.date, format="%Y-%m-%d"))
+            data['categories'].append(getFormatDate(date=item.date, date_format="%Y-%m-%d"))
             data['series'][0]['data'].append(item.total_shared_count)
 
     resp['data'] = data
@@ -110,8 +110,8 @@ def share():
 def member():
     now = datetime.datetime.now()
     date_before_30days = now + datetime.timedelta(days=-30)
-    date_from = getFormatDate(date=date_before_30days, format="%Y-%m-%d")
-    date_to = getFormatDate(date=now, format="%Y-%m-%d")
+    date_from = getFormatDate(date=date_before_30days, date_format="%Y-%m-%d")
+    date_to = getFormatDate(date=now, date_format="%Y-%m-%d")
 
     list = StatDailyMember.query.filter(StatDailyMember.date >= date_from) \
         .filter(StatDailyMember.date <= date_to).order_by(StatDailyMember.id.asc()) \
@@ -130,7 +130,7 @@ def member():
 
     if list:
         for item in list:
-            data['categories'].append(getFormatDate(date=item.date, format="%Y-%m-%d"))
+            data['categories'].append(getFormatDate(date=item.date, date_format="%Y-%m-%d"))
             data['series'][0]['data'].append(item.total_shared_count)
 
     resp['data'] = data
@@ -141,8 +141,8 @@ def member():
 def cards():
     now = datetime.datetime.now()
     date_before_30days = now + datetime.timedelta(days=-30)
-    date_from = getFormatDate(date=date_before_30days, format="%Y-%m-%d")
-    date_to = getFormatDate(date=now, format="%Y-%m-%d")
+    date_from = getFormatDate(date=date_before_30days, date_format="%Y-%m-%d")
+    date_to = getFormatDate(date=now, date_format="%Y-%m-%d")
 
     list = StatDailyCard.query.filter(StatDailyCard.date >= date_from) \
         .filter(StatDailyCard.date <= date_to).order_by(StatDailyCard.id.asc()) \
@@ -161,7 +161,7 @@ def cards():
 
     if list:
         for item in list:
-            data['categories'].append(getFormatDate(date=item.date, format="%Y-%m-%d"))
+            data['categories'].append(getFormatDate(date=item.date, date_format="%Y-%m-%d"))
             data['series'][0]['data'].append(item.total_shared_count)
 
     resp['data'] = data

@@ -1,7 +1,6 @@
 from flask import Blueprint, request, jsonify
-from web.controllers.helper import iPagination
+from common.libs.Helper import optRender, iPagination
 from common.models.Model import Member, MemberComments, Card
-from web.controllers.helper import opt_render
 from application import db
 
 route_member = Blueprint('member_page', __name__)
@@ -39,7 +38,7 @@ def index():
     resp_data['search_con'] = req
     resp_data['status_mapping'] = Member.status_mapping
     resp_data['current'] = 'index'
-    return opt_render("member/index.html", resp_data)
+    return optRender("member/index.html", resp_data)
 
 
 @route_member.route("/set", methods=["GET", "POST"])
@@ -50,12 +49,12 @@ def set():
             rep = {
                 "info": member_info
             }
-            return opt_render('member/set.html', rep)
+            return optRender('member/set.html', rep)
         else:
             rep = {
                 "info": ""
             }
-            return opt_render('member/set.html', rep)
+            return optRender('member/set.html', rep)
     elif request.method == "POST":
         resp = {
             'code': 200,
@@ -124,7 +123,7 @@ def cat_ops():
 def info():
     info = Member.query.filter_by(id=request.values.get('id')).first()
     resp = {"info": info}
-    return opt_render('member/info.html', resp)
+    return optRender('member/info.html', resp)
 
 
 @route_member.route("/comment", methods=["GET"])
@@ -166,4 +165,4 @@ def comment():
     resp_data['list'] = data_list
     resp_data['pages'] = pages
     resp_data['current'] = 'comment'
-    return opt_render("member/comment.html", resp_data)
+    return optRender("member/comment.html", resp_data)

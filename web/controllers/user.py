@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask import make_response, redirect, g
-from web.controllers.helper import opt_render, gen_pwd, gene_auth_code
+from common.libs.Helper import optRender, genPwd, geneAuthCode
 from application import db
 import json
 from common.models.Model import User
@@ -12,7 +12,7 @@ route_user = Blueprint("user_page", __name__)
 @route_user.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "GET":
-        return opt_render("user/login.html")
+        return optRender("user/login.html")
     else:
         resp = {
             'code': 200,
@@ -40,7 +40,7 @@ def login():
             return jsonify(resp)
 
         # 密码加密
-        if user_info.login_pwd != gen_pwd(login_pwd, user_info.login_salt):
+        if user_info.login_pwd != genPwd(login_pwd, user_info.login_salt):
             resp['code'] = -1
             resp['msg'] = "请输入正确的用户名/密码-4"
             return jsonify(resp)
@@ -52,14 +52,14 @@ def login():
 
         # 设置cookie
         response = make_response(json.dumps(resp))
-        response.set_cookie("file_server", f"{gene_auth_code(user_info)}#{user_info.uid}")
+        response.set_cookie("file_server", f"{geneAuthCode(user_info)}#{user_info.uid}")
         return response
 
 
 @route_user.route("/edit", methods=["GET", "POST"])
 def edit():
     if request.method == "GET":
-        return opt_render("user/edit.html", {'current': 'edit'})
+        return optRender("user/edit.html", {'current': 'edit'})
     else:
         resp = {
             'code': 200,
@@ -91,7 +91,7 @@ def edit():
 @route_user.route("/reset-pwd", methods=["GET", "POST"])
 def reset_pwd():
     if request.method == "GET":
-        return opt_render("user/reset_pwd.html", {'current': 'reset-pwd'})
+        return optRender("user/reset_pwd.html", {'current': 'reset-pwd'})
     else:
         resp = {
             'code': 200,
@@ -108,7 +108,7 @@ def reset_pwd():
             resp['code'] = -1
             resp['msg'] = "请输入原密码~~"
             return jsonify(resp)
-        if gen_pwd(old_password, user_info.login_salt) != user_info.login_pwd:
+        if genPwd(old_password, user_info.login_salt) != user_info.login_pwd:
             resp['code'] = -1
             resp['msg'] = "原密码错误~~"
             return jsonify(resp)
@@ -118,13 +118,13 @@ def reset_pwd():
             return jsonify(resp)
 
         # 更新数据库数据
-        user_info.login_pwd = gen_pwd(new_password, user_info.login_salt)
+        user_info.login_pwd = genPwd(new_password, user_info.login_salt)
         db.session.add(user_info)
         db.session.commit()
 
         # 修改密码后设置cookie
         response = make_response(json.dumps(resp))
-        response.set_cookie("file_server", f"{gene_auth_code(user_info)}#{user_info.uid}")
+        response.set_cookie("file_server", f"{geneAuthCode(user_info)}#{user_info.uid}")
         return response
 
 

@@ -1,8 +1,7 @@
 from flask import Blueprint, request
-from web.controllers.helper import opt_render
+from common.libs.Helper import optRender, iPagination
 from common.models.Model import MemberAddress, PayOrder, PayOrderItem, Card
 from application import app, db
-from web.controllers.helper import iPagination
 from sqlalchemy import func
 
 route_finance = Blueprint('finance_page', __name__)
@@ -43,7 +42,7 @@ def index():
         'pay_status_mapping': PayOrder.pay_status_display_mapping,
         'current': 'index'
     }
-    return opt_render("finance/index.html", resp_data)
+    return optRender("finance/index.html", resp_data)
 
 
 @route_finance.route("/pay-info", methods=["GET"])
@@ -70,7 +69,7 @@ def pay_info():
         "member": member,
         "pay_order_item": results
     }
-    return opt_render('finance/pay_info.html', resp)
+    return optRender('finance/pay_info.html', resp)
 
 
 @route_finance.route("/account")
@@ -102,4 +101,4 @@ def account():
     resp_data['pages'] = pages
     resp_data['total_money'] = stat_info[0] if stat_info[0] else 0.00
     resp_data['current'] = 'account'
-    return opt_render("finance/account.html", resp_data)
+    return optRender("finance/account.html", resp_data)

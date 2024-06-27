@@ -1,7 +1,6 @@
 from flask import Blueprint, request, jsonify
-from web.controllers.helper import opt_render
+from common.libs.Helper import optRender, iPagination, isInteger, isValidIntegerStock, isValidPrice
 from common.models.Model import CardCat, Card
-from web.controllers.helper import iPagination, is_integer, is_valid_integer_stock, is_valid_price
 from sqlalchemy import or_
 from application import db
 
@@ -59,7 +58,7 @@ def index():
         "current": "index",
         'status_mapping': Card.status_mapping
     }
-    return opt_render('card/index.html', resp)
+    return optRender('card/index.html', resp)
 
 
 @route_card.route("/cat", methods=["GET"])
@@ -104,7 +103,7 @@ def cat():
         "current": "cat",
         'status_mapping': Card.status_mapping
     }
-    return opt_render('card/cat.html', resp)
+    return optRender('card/cat.html', resp)
 
 
 @route_card.route("/set", methods=["GET", "POST"])
@@ -114,11 +113,11 @@ def set():
             cat_list = CardCat.query.filter_by(status=1).order_by(CardCat.weight.desc()).all()
             info = Card.query.filter_by(id=request.values.get('id')).first()
             rep = {"info": info, "current": "index", "cat_list": cat_list}
-            return opt_render('card/set.html', rep)
+            return optRender('card/set.html', rep)
         else:
             cat_list = CardCat.query.filter_by(status=1).order_by(CardCat.weight.desc()).all()
             rep = {"info": "", "current": "index", "cat_list": cat_list}
-            return opt_render('card/set.html', rep)
+            return optRender('card/set.html', rep)
     elif request.method == "POST":
         resp = {
             'code': 200,
@@ -138,7 +137,7 @@ def set():
             return jsonify(resp)
 
         price = request.values.get('price')
-        if price is None or not is_valid_price(price):
+        if price is None or not isValidPrice(price):
             resp['code'] = -1
             resp['msg'] = "请输入符合规范的价格~~"
             return jsonify(resp)
@@ -156,7 +155,7 @@ def set():
             return jsonify(resp)
 
         stock = request.values.get('stock')
-        if stock is None or not is_valid_integer_stock(stock):
+        if stock is None or not isValidIntegerStock(stock):
             resp['code'] = -1
             resp['msg'] = "请输入符合规范的库存~~"
             return jsonify(resp)
@@ -192,10 +191,10 @@ def cat_set():
         if request.values.get('id'):
             info = CardCat.query.filter_by(id=request.values.get('id')).first()
             rep = {"info": info, "current": "cat"}
-            return opt_render('card/cat_set.html', rep)
+            return optRender('card/cat_set.html', rep)
         else:
             rep = {"info": "", "current": "cat"}
-            return opt_render('card/cat_set.html', rep)
+            return optRender('card/cat_set.html', rep)
     elif request.method == "POST":
         resp = {
             'code': 200,
@@ -209,7 +208,7 @@ def cat_set():
             return jsonify(resp)
 
         weight = request.values.get('weight')
-        if weight is None or len(weight) < 1 or not is_integer(weight):
+        if weight is None or len(weight) < 1 or not isInteger(weight):
             resp['code'] = -1
             resp['msg'] = "请输入符合规范的权重~~"
             return jsonify(resp)
@@ -288,4 +287,4 @@ def ops():
 def info():
     info = Card.query.filter_by(id=request.values.get('id')).first()
     resp = {"info": info, "current": "index"}
-    return opt_render('card/info.html', resp)
+    return optRender('card/info.html', resp)

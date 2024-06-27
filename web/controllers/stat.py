@@ -1,6 +1,5 @@
 from flask import Blueprint, request
-from web.controllers.helper import opt_render
-from common.libs.Helper import getFormatDate, iPagination, getDictFilterField, selectFilterObj
+from common.libs.Helper import getFormatDate, iPagination, getDictFilterField, selectFilterObj, optRender
 from common.models.Model import StatDailySite
 from common.models.Model import StatDailyCard
 from common.models.Model import StatDailyMember
@@ -15,8 +14,8 @@ route_stat = Blueprint("stat_page", __name__)
 def index():
     now = datetime.datetime.now()
     date_before_30days = now + datetime.timedelta(days=-30)
-    default_date_from = getFormatDate(date=date_before_30days, format="%Y-%m-%d")
-    default_date_to = getFormatDate(date=now, format="%Y-%m-%d")
+    default_date_from = getFormatDate(date=date_before_30days, date_format="%Y-%m-%d")
+    default_date_to = getFormatDate(date=now, date_format="%Y-%m-%d")
 
     resp_data = {}
     req = request.values
@@ -45,15 +44,15 @@ def index():
         'date_from': date_from,
         'date_to': date_to
     }
-    return opt_render("stat/index.html", resp_data)
+    return optRender("stat/index.html", resp_data)
 
 
 @route_stat.route("/cards")
 def cards():
     now = datetime.datetime.now()
     date_before_30days = now + datetime.timedelta(days=-30)
-    default_date_from = getFormatDate(date=date_before_30days, format="%Y-%m-%d")
-    default_date_to = getFormatDate(date=now, format="%Y-%m-%d")
+    default_date_from = getFormatDate(date=date_before_30days, date_format="%Y-%m-%d")
+    default_date_to = getFormatDate(date=now, date_format="%Y-%m-%d")
 
     resp_data = {}
     req = request.values
@@ -94,15 +93,15 @@ def cards():
         'date_from': date_from,
         'date_to': date_to
     }
-    return opt_render("stat/cards.html", resp_data)
+    return optRender("stat/cards.html", resp_data)
 
 
 @route_stat.route("/member")
 def memebr():
     now = datetime.datetime.now()
     date_before_30days = now + datetime.timedelta(days=-30)
-    default_date_from = getFormatDate(date=date_before_30days, format="%Y-%m-%d")
-    default_date_to = getFormatDate(date=now, format="%Y-%m-%d")
+    default_date_from = getFormatDate(date=date_before_30days, date_format="%Y-%m-%d")
+    default_date_to = getFormatDate(date=now, date_format="%Y-%m-%d")
 
     resp_data = {}
     req = request.values
@@ -144,15 +143,15 @@ def memebr():
         'date_from': date_from,
         'date_to': date_to
     }
-    return opt_render("stat/member.html", resp_data)
+    return optRender("stat/member.html", resp_data)
 
 
 @route_stat.route("/share")
 def share():
     now = datetime.datetime.now()
     date_before_30days = now + datetime.timedelta(days=-30)
-    default_date_from = getFormatDate(date=date_before_30days, format="%Y-%m-%d")
-    default_date_to = getFormatDate(date=now, format="%Y-%m-%d")
+    default_date_from = getFormatDate(date=date_before_30days, date_format="%Y-%m-%d")
+    default_date_to = getFormatDate(date=now, date_format="%Y-%m-%d")
 
     resp_data = {}
     req = request.values
@@ -180,4 +179,4 @@ def share():
         'date_from': date_from,
         'date_to': date_to
     }
-    return opt_render("stat/share.html", resp_data)
+    return optRender("stat/share.html", resp_data)

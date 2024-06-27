@@ -1,7 +1,6 @@
 from flask import Blueprint, request
-from web.controllers.helper import opt_render
+from common.libs.Helper import optRender, iPagination
 from common.models.Model import SysLog
-from web.controllers.helper import iPagination
 from sqlalchemy import or_
 
 route_sys = Blueprint('sys_page', __name__)
@@ -55,4 +54,4 @@ def index():
         'account_type_mapping': SysLog.account_type_mapping,
         'operation_mapping': SysLog.operation_mapping,
     }
-    return opt_render("sys/index.html", resp_data)
+    return optRender("sys/index.html", resp_data)

@@ -1,7 +1,6 @@
 from flask import Blueprint, request, redirect, g, jsonify
-from web.controllers.helper import opt_render, gen_pwd
+from common.libs.Helper import optRender, genPwd, iPagination, generateRandomNumber
 from common.models.Model import User, SysLog
-from web.controllers.helper import iPagination, generate_random_number
 from sqlalchemy import or_
 from application import db
 
@@ -49,7 +48,7 @@ def index():
         'search_con': request.values,
         'status_mapping': User.status_mapping
     }
-    return opt_render('account/index.html', resp)
+    return optRender('account/index.html', resp)
 
 
 @route_account.route("/set", methods=["GET", "POST"])
@@ -65,7 +64,7 @@ def set():
                     "2": "女"
                 }
             }
-            return opt_render('account/set.html', rep)
+            return optRender('account/set.html', rep)
     elif request.method == "POST":
         resp = {
             'code': 200,
@@ -121,10 +120,10 @@ def set():
         else:
             # 新增数据
             user_info = User()
-        login_salt = generate_random_number()
+        login_salt = generateRandomNumber()
         user_info.avatar = avatar
         user_info.nickname = nickname
-        user_info.login_pwd = gen_pwd(login_pwd, login_salt)
+        user_info.login_pwd = genPwd(login_pwd, login_salt)
         user_info.login_salt = login_salt
         user_info.mobile = mobile
         user_info.email = email
@@ -148,7 +147,7 @@ def info():
     # 当输入uid超过最大值重定向第一页
     if int(uid) > user_count:
         return redirect('/account/index')
-    return opt_render('account/info.html', resp)
+    return optRender('account/info.html', resp)
 
 
 @route_account.route("/ops", methods=["POST"])
