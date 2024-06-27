@@ -15,7 +15,7 @@
         </div>
         <div class="row">
             <div class="col-lg-2 text-center">
-                <img class="img-circle circle-border" src="{{ buildStaticUrl('/images/common/avatar.png') }}" width="100px" height="100px">
+                <img class="img-circle circle-border" src="{% if info.avatar %}{{ buildAccountImageUrl(info.avatar) }}{% else %}{{ buildStaticUrl('/images/common/avatar.png') }}{% endif %}" width="100px" height="100px">
             </div>
             <div class="col-lg-10">
                 <p class="m-t">姓名：{{ info.nickname }}</p>
@@ -46,11 +46,11 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    {% if access_list %}
-                                        {% for item in access_list %}
+                                    {% if sys_logs %}
+                                        {% for item in sys_logs %}
                                             <tr>
                                             <td>{{ item.created_time }}</td>
-                                            <td>{{ item.target_url }}</td>
+                                            <td>{{ request.host }}{{ buildUrl(item.operation) }}</td>
                                             <td></td>
                                             </tr>
                                         {% endfor %}

@@ -1,6 +1,6 @@
 from flask import Blueprint, request, redirect, g, jsonify
 from web.controllers.helper import opt_render, gen_pwd
-from common.models.Model import User
+from common.models.Model import User, SysLog
 from web.controllers.helper import iPagination, generate_random_number
 from sqlalchemy import or_
 from application import db
@@ -140,7 +140,11 @@ def info():
     uid = request.values.get('id')
     user_count = User.query.count()
     user_info = User.query.filter_by(uid=uid).first()
-    resp = {'info': user_info}
+    sys_log = SysLog.query.filter_by(account_id=uid).all()
+    resp = {
+        'info': user_info,
+        'sys_logs': sys_log,
+    }
     # 当输入uid超过最大值重定向第一页
     if int(uid) > user_count:
         return redirect('/account/index')
