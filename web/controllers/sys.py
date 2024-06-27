@@ -23,7 +23,7 @@ def index():
         "page_size": page_size,  # 每页的数量
         "page": int(page),  # 第几页
         "display": 10,
-        "url": '/card/index?'
+        "url": '/sys/index?'
     }
     pages = iPagination(params)
     offset = (page - 1) * page_size
@@ -45,10 +45,10 @@ def index():
     if operation:
         query = query.filter_by(operation=operation)
 
-    pay_list = query.order_by(SysLog.id.desc()).all()[offset:limit]
+    sys_log_list = query.order_by(SysLog.id.desc()).all()[offset:limit]
 
     resp_data = {
-        'list': pay_list,
+        'list': sys_log_list,
         'pages': pages,
         'search_con': request.values,
         "current": "index",

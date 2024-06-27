@@ -61,7 +61,7 @@
                 <td>{{ item.account_type_desc }}</td>
                 <td>{{ item.operation_desc }}</td>
                 <td>{{ item.method }}</td>
-                <td>{{ item.params }}</td>
+                <td>{{ item.params | truncate(100) }}</td>
                 <td>{{ item.time }}</td>
                 <td>{{ item.ip }}</td>
                 <td>{{ item.created_time }}</td>

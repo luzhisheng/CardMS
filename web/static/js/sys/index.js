@@ -4,7 +4,6 @@ var sys_index_ops = {
         this.eventBind();
     },
     eventBind:function(){
-        var that = this;
         $(".wrap_search .search").click( function(){
             $(".wrap_search").submit();
         });

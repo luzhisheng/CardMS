@@ -317,11 +317,26 @@ class SysLog(db.Model):
         return self.account_type_mapping.get(self.account_type, "未知类型")
 
     operation_mapping = {
-        "login": "登陆",
-        "logout": "登出",
-        "view_profile": "查看资料",
-        "update_settings": "更新设置",
-        "purchase_item": "购买商品",
+        "/finance/pay-info": "订单信息",
+        "/finance/account": "财务流水",
+        "/finance/index": "订单列表",
+        "/member/info": "会员信息",
+        "/member/set": "会员设置",
+        "/member/comment": "会员评论",
+        "/member/index": "会员列表",
+        "/card/cat": "卡券分类",
+        "/card/index": "卡券列表",
+        "/card/info": "卡券信息",
+        "/card/set": "卡券设置",
+        "/card/cat-set": "卡券分类设置",
+        "/account/index": "账户列表",
+        "/account/info": "账户信息",
+        "/account/set": "账号设置",
+        "/sys/index": "用户行为列表",
+        "/stat/index": "财务统计",
+        "/stat/cards": "售卖统计",
+        "/stat/member": "会员消费统计",
+        "/stat/share": "分享统计"
     }
 
     @property

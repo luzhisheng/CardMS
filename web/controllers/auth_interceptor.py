@@ -1,9 +1,11 @@
-from application import app
-from common.models.Model import User
+from application import app, db
+from common.models.Model import User, SysLog
 from flask import request, g
 from flask import redirect
+from urllib.parse import urlparse
 import hashlib
 import base64
+import time
 
 
 def gene_auth_code(user_info):
@@ -14,9 +16,48 @@ def gene_auth_code(user_info):
     return m.hexdigest()
 
 
-# @app.before_request是一个装饰器，用于注册一个在每个请求之前执行的函数。
+@app.after_request
+def after_request_logging(response):
+    """
+    函数在请求结束时计算请求持续时间，并将日志信息保存到数据库中
+    :return:
+    """ 
+    duration = time.time() - g.start_time
+    url_path = urlparse(request.url).path
+    operation_key_list = list(SysLog.operation_mapping.keys())
+    if url_path in operation_key_list:
+
+        params = {}
+        if request.method == 'GET':
+            params = request.args.to_dict()  # 获取查询参数
+        elif request.method == 'POST':
+            if request.is_json:
+                params = request.get_json()  # 获取JSON数据
+            else:
+                params = request.form.to_dict()  # 获取表单数据
+
+        log = SysLog(
+            nickname=g.current_user.nickname,
+            account_id=g.current_user.uid,
+            account_type=1,
+            operation=url_path,
+            method=request.method,
+            params=str(params),
+            time=int(duration * 1000),
+            ip=request.remote_addr
+        )
+        db.session.add(log)
+        db.session.commit()
+    return response
+
+
 @app.before_request
 def before_request():
+    """
+    函数在请求开始时记录开始时间
+    :return:
+    """
+    g.start_time = time.time()
     path = request.path
     user_info = check_login()
     g.current_user = None
