@@ -23,7 +23,7 @@ def index():
         "page_size": page_size,  # 每页的数量
         "page": int(page),  # 第几页
         "display": 10,
-        "url": '/sys/index?'
+        "url": request.full_path.replace("&p={}".format(page), "")
     }
     pages = iPagination(params)
     offset = (page - 1) * page_size
