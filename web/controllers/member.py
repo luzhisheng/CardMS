@@ -37,10 +37,7 @@ def index():
     resp_data['list'] = list
     resp_data['pages'] = pages
     resp_data['search_con'] = req
-    resp_data['status_mapping'] = {
-        "1": "正常",
-        "-1": "已删除"
-    }
+    resp_data['status_mapping'] = Member.status_mapping
     resp_data['current'] = 'index'
     return opt_render("member/index.html", resp_data)
 

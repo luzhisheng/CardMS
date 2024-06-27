@@ -47,10 +47,7 @@ def index():
         'user_list': user_list,
         'pages': pages,
         'search_con': request.values,
-        'status_mapping': {
-            "1": "正常",
-            "-1": "已删除"
-        }
+        'status_mapping': User.status_mapping
     }
     return opt_render('account/index.html', resp)
 

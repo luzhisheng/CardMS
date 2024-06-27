@@ -57,10 +57,7 @@ def index():
         'cat_mapping': cat_mapping,
         'search_con': request.values,
         "current": "index",
-        'status_mapping': {
-            "1": "正常",
-            "-1": "已删除"
-        }
+        'status_mapping': Card.status_mapping
     }
     return opt_render('card/index.html', resp)
 
@@ -105,10 +102,7 @@ def cat():
         'pages': pages,
         'search_con': request.values,
         "current": "cat",
-        'status_mapping': {
-            "1": "正常",
-            "-1": "已删除"
-        }
+        'status_mapping': Card.status_mapping
     }
     return opt_render('card/cat.html', resp)
 

@@ -24,6 +24,15 @@ class Card(db.Model):
     updated_time = db.Column(db.DateTime, nullable=False, server_default=db.FetchedValue(), info='最后更新时间')
     created_time = db.Column(db.DateTime, nullable=False, server_default=db.FetchedValue(), info='最后插入时间')
 
+    status_mapping = {
+        "1": "正常",
+        "-1": "已删除"
+    }
+
+    @property
+    def status_desc(self):
+        return self.status_mapping[str(self.status)]
+
 
 class CardCat(db.Model):
     """
@@ -60,6 +69,15 @@ class User(db.Model):
     updated_time = db.Column(db.DateTime, nullable=False, server_default=db.FetchedValue(), info='最后一次更新时间')
     created_time = db.Column(db.DateTime, nullable=False, server_default=db.FetchedValue(), info='插入时间')
 
+    status_mapping = {
+        "1": "正常",
+        "-1": "已删除"
+    }
+
+    @property
+    def status_desc(self):
+        return self.status_mapping[str(self.status)]
+
     @property
     def sex_desc(self):
         sex_map = {
@@ -90,13 +108,14 @@ class Member(db.Model):
     # Establishing relationship
     comments = db.relationship('MemberComments', backref='member', lazy=True)
 
+    status_mapping = {
+        "1": "正常",
+        "-1": "已删除"
+    }
+
     @property
     def status_desc(self):
-        status_mapping = {
-            "1": "正常",
-            "-1": "已删除"
-        }
-        return status_mapping[str(self.status)]
+        return self.status_mapping[str(self.status)]
 
     @property
     def sex_desc(self):
