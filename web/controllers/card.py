@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from common.libs.Helper import optRender, iPagination, isInteger, isValidIntegerStock, isValidPrice
+from common.libs.Helper import optRender, paging, isInteger, isValidIntegerStock, isValidPrice
 from common.models.Model import CardCat, Card
 from sqlalchemy import or_
 from application import db
@@ -9,26 +9,6 @@ route_card = Blueprint("card_page", __name__)
 
 @route_card.route("/index", methods=["GET", "POST"])
 def index():
-    count = Card.query.count()
-    p = request.values.get('p')
-
-    page_size = 20
-    if not p:
-        page = 1
-    else:
-        page = int(p)
-
-    params = {
-        "total": count,  # 总数
-        "page_size": page_size,  # 每页的数量
-        "page": int(page),  # 第几页
-        "display": 10,
-        "url": request.full_path.replace("&p={}".format(page), "")
-    }
-    pages = iPagination(params)
-    offset = (page - 1) * page_size
-    limit = page_size * page
-
     query = Card.query
 
     mix_kw = request.values.get('mix_kw')
@@ -45,6 +25,12 @@ def index():
     status = request.values.get('status')
     if status:
         query = query.filter_by(status=status)
+
+    # 获取分页数据
+    count = query.count()
+    p = request.values.get('p')
+    page_size = 20
+    pages, offset, limit = paging(page_size, count, p)
 
     card_list = query.order_by(Card.id.desc()).all()[offset:limit]
     cats = CardCat.query.filter_by(status=1).all()
@@ -63,37 +49,23 @@ def index():
 
 @route_card.route("/cat", methods=["GET"])
 def cat():
-    count = CardCat.query.count()
-    p = request.values.get('p')
-
-    page_size = 20
-    if not p:
-        page = 1
-    else:
-        page = int(p)
-
-    params = {
-        "total": count,  # 总数
-        "page_size": page_size,  # 每页的数量
-        "page": int(page),  # 第几页
-        "display": 10,
-        "url": request.full_path.replace("&p={}".format(page), "")
-    }
-    pages = iPagination(params)
-    offset = (page - 1) * page_size
-    limit = page_size * page
-
     query = CardCat.query
+    req = request.values
 
-    mix_kw = request.values.get('mix_kw')
-    if mix_kw:
+    if req.get('mix_kw'):
         # 搜索查询
-        rule = CardCat.name.ilike(f"%{mix_kw}%")
+        rule = CardCat.name.ilike(f"%{req.get('mix_kw')}%")
         query = query.filter(rule)
 
-    status = request.values.get('status')
-    if status:
-        query = query.filter_by(status=status)
+    if req.get('status'):
+        # 状态查询
+        query = query.filter_by(status=req.get('status'))
+
+    count = query.count()
+    # 获取分页数据
+    p = request.values.get('p')
+    page_size = 20
+    pages, offset, limit = paging(page_size, count, p)
 
     card_cat_list = query.order_by(CardCat.weight.desc()).all()[offset:limit]
     resp = {

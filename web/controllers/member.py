@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from common.libs.Helper import optRender, iPagination
+from common.libs.Helper import optRender, paging
 from common.models.Model import Member, MemberComments, Card
 from application import db
 
@@ -8,12 +8,8 @@ route_member = Blueprint('member_page', __name__)
 
 @route_member.route("/index")
 def index():
-    resp_data = {}
     req = request.values
-    page = int(req['p']) if ('p' in req and req['p']) else 1
     query = Member.query
-
-    page_size = 20
 
     if 'mix_kw' in req:
         query = query.filter(Member.nickname.ilike("%{0}%".format(req['mix_kw'])))
@@ -21,46 +17,38 @@ def index():
     if 'status' in req and int(req['status']) != 0:
         query = query.filter(Member.status == int(req['status']))
 
-    page_params = {
-        'total': query.count(),
-        'page_size': page_size,
-        'page': page,
-        'display': 10,
-        'url': request.full_path.replace("&p={}".format(page), "")
+    # 获取分页数据
+    count = query.count()
+    p = req.get('p')
+    page_size = 20
+    pages, offset, limit = paging(page_size, count, p)
+
+    member_list = query.order_by(Member.id.desc()).offset(offset).limit(page_size).all()
+    resp_data = {
+        'list': member_list,
+        'pages': pages,
+        'search_con': req,
+        'status_mapping': Member.status_mapping,
+        'current': 'index'
     }
-
-    pages = iPagination(page_params)
-    offset = (page - 1) * page_size
-    list = query.order_by(Member.id.desc()).offset(offset).limit(page_size).all()
-
-    resp_data['list'] = list
-    resp_data['pages'] = pages
-    resp_data['search_con'] = req
-    resp_data['status_mapping'] = Member.status_mapping
-    resp_data['current'] = 'index'
     return optRender("member/index.html", resp_data)
 
 
 @route_member.route("/set", methods=["GET", "POST"])
 def set():
     if request.method == "GET":
+        rep = {"info": ""}
         if request.values.get('id'):
             member_info = Member.query.filter_by(id=request.values.get('id')).first()
-            rep = {
-                "info": member_info
-            }
-            return optRender('member/set.html', rep)
-        else:
-            rep = {
-                "info": ""
-            }
-            return optRender('member/set.html', rep)
+            rep['info'] = member_info
+        return optRender('member/set.html', rep)
     elif request.method == "POST":
         resp = {
             'code': 200,
             'msg': "新增用户成功",
             "data": {}
         }
+
         nickname = request.values.get('nickname')
         if nickname is None or len(nickname) < 1:
             resp['code'] = -1
@@ -76,13 +64,14 @@ def set():
             resp['code'] = -1
             resp['msg'] = "请输入符合规范的头像~~"
             return jsonify(resp)
+
         if request.values.get('id'):
             # 修改数据
             member_info = Member.query.filter_by(id=request.values.get('id')).first()
             resp['msg'] = "修改用户成功"
         else:
             # 新增数据
-            pass
+            member_info = Member
         member_info.nickname = nickname
         member_info.mobile = mobile
         member_info.avatar = avatar
@@ -93,15 +82,14 @@ def set():
 
 @route_member.route("/ops", methods=["POST"])
 def cat_ops():
-    act = request.values.get('act')
-    id = request.values.get('id')
-    if act == "remove":
+    req = request.values
+    if req.get('act') == "remove":
         resp = {
             'code': 200,
             'msg': "删除用户成功",
             "data": {}
         }
-        user_info = Member.query.filter_by(id=id).first()
+        user_info = Member.query.filter_by(id=req.get('id')).first()
         user_info.status = -1
         db.session.add(user_info)
         db.session.commit()
@@ -112,7 +100,7 @@ def cat_ops():
             'msg': "恢复用户成功",
             "data": {}
         }
-        user_info = Member.query.filter_by(id=id).first()
+        user_info = Member.query.filter_by(id=req.get('id')).first()
         user_info.status = 1
         db.session.add(user_info)
         db.session.commit()
@@ -128,25 +116,18 @@ def info():
 
 @route_member.route("/comment", methods=["GET"])
 def comment():
-    resp_data = {}
-    req = request.args
-    page = int(req['p']) if ('p' in req and req['p']) else 1
+    req = request.values
 
     # 查询评论并连接用户表
     query = db.session.query(MemberComments, Member, Card). \
         join(Member, MemberComments.member_id == Member.id). \
         join(Card, MemberComments.card_id == Card.id)
 
-    page_params = {
-        'total': query.count(),
-        'page_size': 20,
-        'page': page,
-        'display': 10,
-        'url': request.full_path.replace("&p={}".format(page), "")
-    }
-
-    pages = iPagination(page_params)
-    offset = (page - 1) * 20
+    # 获取分页数据
+    count = query.count()
+    p = req.get('p')
+    page_size = 20
+    pages, offset, limit = paging(page_size, count, p)
 
     comment_list = query.order_by(MemberComments.id.desc()).offset(offset).limit(20).all()
 
@@ -161,8 +142,9 @@ def comment():
                 "content": comment.content,
                 "score": comment.score
             })
-
-    resp_data['list'] = data_list
-    resp_data['pages'] = pages
-    resp_data['current'] = 'comment'
+    resp_data = {
+        'list': data_list,
+        'pages': pages,
+        'current': 'comment'
+    }
     return optRender("member/comment.html", resp_data)

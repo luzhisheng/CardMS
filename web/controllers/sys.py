@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from common.libs.Helper import optRender, iPagination
+from common.libs.Helper import optRender, paging
 from common.models.Model import SysLog
 from sqlalchemy import or_
 
@@ -8,26 +8,6 @@ route_sys = Blueprint('sys_page', __name__)
 
 @route_sys.route("/index")
 def index():
-    count = SysLog.query.count()
-    p = request.values.get('p')
-
-    page_size = 20
-    if not p:
-        page = 1
-    else:
-        page = int(p)
-
-    params = {
-        "total": count,  # 总数
-        "page_size": page_size,  # 每页的数量
-        "page": int(page),  # 第几页
-        "display": 10,
-        "url": request.full_path.replace("&p={}".format(page), "")
-    }
-    pages = iPagination(params)
-    offset = (page - 1) * page_size
-    limit = page_size * page
-
     query = SysLog.query
 
     mix_kw = request.values.get('mix_kw')
@@ -43,6 +23,12 @@ def index():
     operation = request.values.get('operation')
     if operation:
         query = query.filter_by(operation=operation)
+
+    # 获取分页数据
+    count = query.count()
+    p = request.values.get('p')
+    page_size = 20
+    pages, offset, limit = paging(page_size, count, p)
 
     sys_log_list = query.order_by(SysLog.id.desc()).all()[offset:limit]
 

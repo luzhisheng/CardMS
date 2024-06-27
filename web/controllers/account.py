@@ -1,5 +1,5 @@
 from flask import Blueprint, request, redirect, g, jsonify
-from common.libs.Helper import optRender, genPwd, iPagination, generateRandomNumber
+from common.libs.Helper import optRender, genPwd, paging, generateRandomNumber
 from common.models.Model import User, SysLog
 from sqlalchemy import or_
 from application import db
@@ -9,26 +9,6 @@ route_account = Blueprint("account_page", __name__)
 
 @route_account.route("/index")
 def index():
-    user_count = User.query.count()
-    p = request.values.get('p')
-
-    page_size = 20
-    if not p:
-        page = 1
-    else:
-        page = int(p)
-
-    params = {
-        "total": user_count,  # 总数
-        "page_size": page_size,  # 每页的数量
-        "page": int(page),  # 第几页
-        "display": 10,
-        "url": request.full_path.replace("&p={}".format(page), "")
-    }
-    pages = iPagination(params)
-    offset = (page - 1) * page_size
-    limit = page_size * page
-
     query = User.query
 
     mix_kw = request.values.get('mix_kw')
@@ -40,6 +20,12 @@ def index():
     status = request.values.get('status')
     if status:
         query = query.filter_by(status=status)
+
+    # 获取分页数据
+    count = query.count()
+    p = request.values.get('p')
+    page_size = 20
+    pages, offset, limit = paging(page_size, count, p)
 
     user_list = query.order_by(User.uid.desc()).all()[offset:limit]
     resp = {
@@ -139,7 +125,7 @@ def info():
     uid = request.values.get('id')
     user_count = User.query.count()
     user_info = User.query.filter_by(uid=uid).first()
-    sys_log = SysLog.query.filter_by(account_id=uid).all()
+    sys_log = SysLog.query.filter_by(account_id=uid).order_by(SysLog.id.desc()).limit(10).all()
     resp = {
         'info': user_info,
         'sys_logs': sys_log,
@@ -152,15 +138,14 @@ def info():
 
 @route_account.route("/ops", methods=["POST"])
 def ops():
-    act = request.values.get('act')
-    uid = request.values.get('id')
-    if act == "remove":
+    req = request.values
+    if req.get('act') == "remove":
         resp = {
             'code': 200,
             'msg': "删除用户成功",
             "data": {}
         }
-        user_info = User.query.filter_by(uid=uid).first()
+        user_info = User.query.filter_by(uid=req.get('id')).first()
         user_info.status = -1
         db.session.add(user_info)
         db.session.commit()
@@ -171,7 +156,7 @@ def ops():
             'msg': "恢复用户成功",
             "data": {}
         }
-        user_info = User.query.filter_by(uid=uid).first()
+        user_info = User.query.filter_by(uid=req.get('id')).first()
         user_info.status = 1
         db.session.add(user_info)
         db.session.commit()

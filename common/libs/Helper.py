@@ -1,4 +1,4 @@
-from flask import g, render_template
+from flask import g, render_template, request
 import hashlib
 import base64
 import datetime
@@ -53,6 +53,32 @@ def optRender(template, context=None):
     if 'current_user' in g:
         context['current_user'] = g.current_user
     return render_template(template, **context)
+
+
+def paging(page_size, total, p):
+    """
+    获取分页的offset，limit，pages
+    :param total:
+    :param page_size:
+    :param p:
+    :return:
+    """
+    if not p:
+        page = 1
+    else:
+        page = int(p)
+
+    params = {
+        "total": total,  # 总数
+        "page_size": page_size,  # 每页的数量
+        "page": int(page),  # 第几页
+        "display": 10,
+        "url": request.full_path.replace("&p={}".format(page), "")
+    }
+    pages = iPagination(params)
+    offset = (page - 1) * page_size
+    limit = page_size * page
+    return pages, offset, limit
 
 
 def iPagination(params):

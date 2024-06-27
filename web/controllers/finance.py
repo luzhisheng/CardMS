@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from common.libs.Helper import optRender, iPagination
+from common.libs.Helper import optRender, paging
 from common.models.Model import MemberAddress, PayOrder, PayOrderItem, Card
 from application import app, db
 from sqlalchemy import func
@@ -9,30 +9,15 @@ route_finance = Blueprint('finance_page', __name__)
 
 @route_finance.route("/index")
 def index():
-    count = PayOrder.query.count()
-    p = request.values.get('p')
-
-    page_size = 20
-    if not p:
-        page = 1
-    else:
-        page = int(p)
-
-    params = {
-        "total": count,  # 总数
-        "page_size": page_size,  # 每页的数量
-        "page": int(page),  # 第几页
-        "display": 10,
-        "url": request.full_path.replace("&p={}".format(page), "")
-    }
-    pages = iPagination(params)
-    offset = (page - 1) * page_size
-    limit = page_size * page
-
     query = PayOrder.query
-    status = request.values.get('status')
-    if status:
-        query = query.filter_by(status=status)
+    if request.values.get('status'):
+        query = query.filter_by(status=request.values.get('status'))
+
+    count = query.count()
+    p = request.values.get('p')
+    page_size = 20
+    pages, offset, limit = paging(page_size, count, p)
+
     pay_list = query.order_by(PayOrder.id.desc()).all()[offset:limit]
 
     resp_data = {
@@ -47,7 +32,6 @@ def index():
 
 @route_finance.route("/pay-info", methods=["GET"])
 def pay_info():
-
     pay_info_id = request.values.get('id')
 
     # 查询订单并连接卡券表和价格表
@@ -74,22 +58,15 @@ def pay_info():
 
 @route_finance.route("/account")
 def account():
-    resp_data = {}
-    req = request.values
-    page = int(req['p']) if ('p' in req and req['p']) else 1
     query = PayOrder.query.filter_by(status=1)
 
-    page_params = {
-        'total': query.count(),
-        'page_size': 20,
-        'page': page,
-        'display': 10,
-        'url': request.full_path.replace("&p={}".format(page), "")
-    }
+    # 获取分页数据
+    count = query.count()
+    p = request.values.get('p')
+    page_size = 20
+    pages, offset, limit = paging(page_size, count, p)
 
-    pages = iPagination(page_params)
-    offset = (page - 1) * 20
-    list = query.order_by(PayOrder.id.desc()).offset(offset).limit(20).all()
+    pay_order_list = query.order_by(PayOrder.id.desc()).offset(offset).limit(20).all()
 
     # 查询总金额并添加 GROUP BY 子句
     stat_info = db.session.query(
@@ -97,8 +74,10 @@ def account():
     ).filter(PayOrder.status == 1).group_by(PayOrder.status).first()
 
     app.logger.info(stat_info)
-    resp_data['list'] = list
-    resp_data['pages'] = pages
-    resp_data['total_money'] = stat_info[0] if stat_info[0] else 0.00
-    resp_data['current'] = 'account'
+    resp_data = {
+        'list': pay_order_list,
+        'pages': pages,
+        'total_money': stat_info[0] if stat_info[0] else 0.00,
+        'current': 'account'
+    }
     return optRender("finance/account.html", resp_data)
