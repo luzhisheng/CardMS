@@ -40,17 +40,18 @@ def index():
 @route_account.route("/set", methods=["GET", "POST"])
 def set():
     if request.method == "GET":
+        rep = {
+            "user_info": "",
+            'sex_mapping': {
+                "0": "没填写",
+                "1": "男",
+                "2": "女"
+            }
+        }
         if request.values.get('id'):
             user_info = User.query.filter_by(uid=request.values.get('id')).first()
-            rep = {
-                "user_info": user_info,
-                'sex_mapping': {
-                    "0": "没填写",
-                    "1": "男",
-                    "2": "女"
-                }
-            }
-            return optRender('account/set.html', rep)
+            rep["user_info"] = user_info
+        return optRender('account/set.html', rep)
     elif request.method == "POST":
         resp = {
             'code': 200,
