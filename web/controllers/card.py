@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from common.libs.Helper import optRender, paging, isInteger, isValidIntegerStock, isValidPrice
-from common.models.Model import CardCat, Card
+from common.models.Model import CardCat, Card, CardStockChangeLog, PayOrderItem, Member
 from sqlalchemy import or_
 from application import db
 
@@ -257,6 +257,24 @@ def ops():
 
 @route_card.route("/info", methods=["GET"])
 def info():
-    info = Card.query.filter_by(id=request.values.get('id')).first()
-    resp = {"info": info, "current": "index"}
+    req_id = request.values.get('id')
+    info = Card.query.filter_by(id=req_id).first()
+    stock_change_list = CardStockChangeLog.get_logs(card_id=req_id)
+
+    # 使用关联查询获取 PayOrderItem 及对应的 Member 信息
+    pay_order_items = db.session.query(PayOrderItem, Member).join(Member, PayOrderItem.member_id == Member.id).filter(
+        PayOrderItem.card_id == req_id).all()
+
+    # 将查询结果整理为需要的格式
+    pay_order_item_list = [{
+        "pay_order_item": item[0],
+        "member": item[1]
+    } for item in pay_order_items]
+
+    resp = {
+        "info": info,
+        "stock_change_list": stock_change_list,
+        "pay_order_item_list": pay_order_item_list,
+        "current": "index"
+    }
     return optRender('card/info.html', resp)

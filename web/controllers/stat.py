@@ -41,7 +41,7 @@ def index():
     return optRender("stat/index.html", resp_data)
 
 
-@route_stat.route("/cards")
+@route_stat.route("/card")
 def cards():
     now = datetime.datetime.now()
     date_before_30days = now + datetime.timedelta(days=-30)
@@ -81,7 +81,7 @@ def cards():
             'date_to': date_to
         }
     }
-    return optRender("stat/cards.html", resp_data)
+    return optRender("stat/card.html", resp_data)
 
 
 @route_stat.route("/member")

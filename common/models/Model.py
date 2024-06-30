@@ -1,5 +1,5 @@
 from application import db
-from application import app
+import datetime
 
 
 class Card(db.Model):
@@ -46,6 +46,47 @@ class CardCat(db.Model):
     status = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue(), info='状态1：有效0：无效')
     updated_time = db.Column(db.DateTime, nullable=False, server_default=db.FetchedValue(), info='最后一次更新时间')
     created_time = db.Column(db.DateTime, nullable=False, server_default=db.FetchedValue(), info='插入时间')
+
+
+class CardStockChangeLog(db.Model):
+    """
+    数据库模型类，表示食品库存变动日志表。
+
+    属性:
+        id (int): 主键，自增。
+        food_id (int): 食品ID，用于标识是哪种食品，不能为空。
+        unit (int): 变动单位，不能为空，默认为 0。
+        total_stock (int): 变动后的总库存，不能为空，默认为 0。
+        note (str): 备注信息，不能为空，默认为空字符串。
+        created_time (datetime): 记录创建时间，不能为空，默认为当前时间。
+    """
+    __tablename__ = 'card_stock_change_log'
+
+    id = db.Column(db.Integer, primary_key=True, comment='主键')
+    card_id = db.Column(db.Integer, nullable=False, index=True, comment='卡券ID')
+    unit = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue(), comment='变动单位')
+    total_stock = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue(), comment='总库存')
+    note = db.Column(db.String(100), nullable=False, server_default=db.FetchedValue(), comment='备注')
+    created_time = db.Column(db.DateTime, nullable=False, server_default=db.FetchedValue(), comment='创建时间')
+
+    @staticmethod
+    def add_log(card_id, unit, total_stock, note):
+        """添加库存变动日志"""
+        log = CardStockChangeLog(
+            card_id=card_id,
+            unit=unit,
+            total_stock=total_stock,
+            note=note,
+            created_time=datetime.datetime.now()
+        )
+        db.session.add(log)
+        db.session.commit()
+
+    @staticmethod
+    def get_logs(card_id, limit=10):
+        """获取最新的库存变动日志"""
+        return CardStockChangeLog.query.filter_by(card_id=card_id).order_by(
+            CardStockChangeLog.created_time.desc()).limit(limit).all()
 
 
 class User(db.Model):
@@ -190,7 +231,7 @@ class PayOrder(db.Model):
     """
     __tablename__ = 'pay_order'
     __table_args__ = (
-        db.Index('idx_member_id_status', 'member_id', 'status'),
+        db.Index('idx_member_id', 'member_id'),
     )
 
     id = db.Column(db.Integer, primary_key=True, info='订单ID')
@@ -202,7 +243,7 @@ class PayOrder(db.Model):
     pay_sn = db.Column(db.String(128), nullable=False, server_default=db.FetchedValue(), info='支付编号')
     prepay_id = db.Column(db.String(128), nullable=False, server_default=db.FetchedValue(), info='预支付ID')
     note = db.Column(db.Text, nullable=False, info='备注')
-    status = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue(), info='订单状态')
+    status = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue(), info='订单状态')  # 新增的状态字段
     express_status = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue(), info='快递状态')
     express_address_id = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue(), info='快递地址ID')
     express_info = db.Column(db.String(100), nullable=False, server_default=db.FetchedValue(), info='快递信息')
@@ -211,24 +252,53 @@ class PayOrder(db.Model):
     updated_time = db.Column(db.DateTime, nullable=False, server_default=db.FetchedValue(), info='更新时间')
     created_time = db.Column(db.DateTime, nullable=False, server_default=db.FetchedValue(), info='创建时间')
 
-    pay_status_display_mapping = {
-        0: "订单关闭",
-        1: "支付成功",
-        -8: "待支付",
-        -7: "待发货",
-        -6: "待确认",
-        -5: "待评价"
-    }
-
-    @property
-    def status_desc(self):
-        return self.pay_status_display_mapping.get(self.status, "未知状态")
+    items = db.relationship('PayOrderItem', back_populates='order')
 
     @property
     def order_number(self):
         order_number = self.created_time.strftime("%Y%m%d%H%M%S")
         order_number = order_number + str(self.id).zfill(5)
         return order_number
+
+    status_mapping = {
+        0: "订单关闭",
+        1: "支付成功",
+        -8: "待支付",
+        -7: "待发货",
+        -6: "已发货",
+        -5: "待确认",
+        -4: "待评价",
+        -3: "申请售后",
+        -2: "已退款"
+    }
+
+    @property
+    def status_desc(self):
+        return self.status_mapping.get(self.status, "未知状态")
+
+    def update_status(self):
+        item_statuses = [item.status for item in self.items]
+
+        if all(status == PayOrderItem.STATUS_CLOSED for status in item_statuses):
+            self.status = 0
+        elif any(status == PayOrderItem.STATUS_REFUNDING for status in item_statuses):
+            self.status = -3
+        elif all(status == PayOrderItem.STATUS_PAID for status in item_statuses):
+            self.status = 1
+        elif any(status == PayOrderItem.STATUS_PENDING for status in item_statuses):
+            self.status = -8
+        elif all(status == PayOrderItem.STATUS_REFUNDED for status in item_statuses):
+            self.status = -2
+        elif all(status == PayOrderItem.STATUS_TO_SHIP for status in item_statuses):
+            self.status = -7
+        elif all(status == PayOrderItem.STATUS_SHIPPED for status in item_statuses):
+            self.status = -6
+        elif all(status == PayOrderItem.STATUS_TO_CONFIRM for status in item_statuses):
+            self.status = -5
+        elif all(status == PayOrderItem.STATUS_TO_COMMENT for status in item_statuses):
+            self.status = -4
+        else:
+            self.status = 0
 
 
 class PayOrderItem(db.Model):
@@ -238,8 +308,8 @@ class PayOrderItem(db.Model):
     __tablename__ = 'pay_order_item'
 
     id = db.Column(db.Integer, primary_key=True, info='订单项ID')
-    pay_order_id = db.Column(db.Integer, nullable=False, index=True, server_default=db.FetchedValue(),
-                             info='支付订单ID')
+    pay_order_id = db.Column(db.Integer, db.ForeignKey('pay_order.id'), nullable=False, index=True,
+                             server_default=db.FetchedValue(), info='支付订单ID')
     member_id = db.Column(db.BigInteger, nullable=False, server_default=db.FetchedValue(), info='会员ID')
     quantity = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue(), info='数量')
     price = db.Column(db.Numeric(10, 2), nullable=False, server_default=db.FetchedValue(), info='价格')
@@ -248,6 +318,24 @@ class PayOrderItem(db.Model):
     status = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue(), info='状态')
     updated_time = db.Column(db.DateTime, nullable=False, server_default=db.FetchedValue(), info='更新时间')
     created_time = db.Column(db.DateTime, nullable=False, server_default=db.FetchedValue(), info='创建时间')
+
+    order = db.relationship('PayOrder', back_populates='items')
+
+    status_mapping = {
+        0: "订单关闭",
+        1: "支付成功",
+        -8: "待支付",
+        -7: "待发货",
+        -6: "已发货",
+        -5: "待确认",
+        -4: "待评价",
+        -3: "申请售后",
+        -2: "已退款"
+    }
+
+    @property
+    def status_desc(self):
+        return self.status_mapping.get(self.status, "未知状态")
 
 
 class StatDailySite(db.Model):

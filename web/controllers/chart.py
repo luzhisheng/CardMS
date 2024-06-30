@@ -137,8 +137,8 @@ def member():
     return jsonify(resp)
 
 
-@route_chart.route("/cards")
-def cards():
+@route_chart.route("/card")
+def card():
     now = datetime.datetime.now()
     date_before_30days = now + datetime.timedelta(days=-30)
     date_from = getFormatDate(date=date_before_30days, date_format="%Y-%m-%d")

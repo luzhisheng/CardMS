@@ -24,7 +24,7 @@ def index():
         'list': pay_list,
         'pages': pages,
         'search_con': request.values,
-        'pay_status_mapping': PayOrder.pay_status_display_mapping,
+        'status_mapping': PayOrder.status_mapping,
         'current': 'index'
     }
     return optRender("finance/index.html", resp_data)
