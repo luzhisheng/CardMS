@@ -14,26 +14,13 @@
                             {% endfor %}
                         </select>
                     </div>
-
-                    <div class="form-group">
-                        <div class="input-group">
-                            <input type="text" name="mix_kw" placeholder="请输入关键词" class="form-control"
-                                   value="" autocomplete="off">
-                            <input type="hidden" name="p" value="">
-                            <span class="input-group-btn">
-                            <button type="button" class="btn btn-primary search">
-                                <i class="fa fa-search"></i>搜索
-                            </button>
-                        </span>
-                        </div>
-                    </div>
                 </div>
                 <hr>
                 <div class="row">
                     <div class="col-lg-12">
                         <a class="btn btn-w-m btn-outline btn-primary pull-right"
                            href="{{ buildUrl('/account/set') }}">
-                            <i class="fa fa-plus"></i>账号
+                            <i class="fa fa-plus"></i>角色
                         </a>
                     </div>
                 </div>
@@ -41,27 +28,21 @@
             <table class="table table-bordered m-t">
                 <thead>
                 <tr>
-                    <th>管理员头像</th>
-                    <th>用户ID</th>
-                    <th>用户昵称</th>
-                    <th>手机</th>
-                    <th>邮箱</th>
-                    <th>角色</th>
+                    <th>角色名称</th>
+                    <th>分配人数</th>
+                    <th>创建人</th>
+                    <th>创建时间</th>
                     <th>操作</th>
                 </tr>
                 </thead>
                 <tbody>
-                {% if user_list %}
-                    {% for item in user_list %}
+                {% if list %}
+                    {% for item in list %}
                         <tr>
-                            <td><img alt="image" class="img-circle"
-                                     src="{% if item.avatar %}{{ buildAccountImageUrl(item.avatar) }}{% else %}{{ buildStaticUrl('/images/common/avatar.png') }}{% endif %}"
-                                     style="width: 40px;height: 40px;"/></td>
-                            <td>{{ item.login_name }}</td>
-                            <td>{{ item.nickname }}</td>
-                            <td>{{ item.mobile }}</td>
-                            <td>{{ item.email }}</td>
-                            <td></td>
+                            <td>{{ item.role_name }}</td>
+                            <td>{{ item.assigned_people_count }}</td>
+                            <td>{{ item.creator }}</td>
+                            <td>{{ item.created_time }}</td>
                             <td>
                                 <a href="{{ buildUrl('/account/info') }}?id={{ item.uid }}">
                                     <i class="fa fa-eye fa-lg"></i>
@@ -90,11 +71,9 @@
                 {% endif %}
                 </tbody>
             </table>
-            <!--分页代码已被封装到统一模板文件中-->
-            {% include 'common/pagenation.html' %}
         </div>
     </div>
 {% endblock %}
 {% block js %}
-    <script src="{{ buildStaticUrl('/js/account/index.js') }}"></script>
+    <script src="{{ buildStaticUrl('/js/account/role.js') }}"></script>
 {% endblock %}

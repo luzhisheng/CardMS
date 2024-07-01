@@ -9001,6 +9001,31 @@ body.rtls.top-navigation .footer.fixed {
     z-index: 2;
 }
 
+.upload_pic_wrap .pic-account {
+    position: relative;
+    float: left;
+}
+
+.upload_pic_wrap .pic-account img {
+    width: 58px;
+    height: 58px;
+    margin: 0 10px 15px 0;
+    float: left;
+    border-radius: 50%;
+}
+
+.upload_pic_wrap .pic-account .del {
+    position: absolute;
+    right: 2px;
+    top: -9px;
+    color: #e5004f;
+    line-height: 1;
+    overflow: hidden;
+    cursor: pointer;
+    font-size: 18px;
+    z-index: 2;
+}
+
 .upload_wrap {
     width: 98px;
     height: 60px;

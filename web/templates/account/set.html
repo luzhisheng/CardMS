@@ -15,7 +15,7 @@
                                 <input type="file" name="pic" accept="image/png, image/jpeg, image/jpg,image/gif">
                             </div>
                             {% if user_info and user_info.avatar %}
-                                <span class="pic-each">
+                                <span class="pic-account">
                             <img src="{{ buildAccountImageUrl( user_info.avatar ) }}"/>
                             <span class="fa fa-times-circle del del_image" data="{{ user_info.avatar }}"></span>
                         </span>

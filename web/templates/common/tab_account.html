@@ -2,8 +2,11 @@
     <div class="col-lg-12">
         <div class="tab_title">
             <ul class="nav nav-pills">
-                <li class="current">
+                <li {% if current == "index" %} class="current" {% endif %}>
                     <a href="{{ buildUrl('/account/index') }}">账户列表</a>
+                </li>
+                <li {% if current == "role" %} class="current" {% endif %}>
+                    <a href="{{ buildUrl('/account/role') }}">角色管理</a>
                 </li>
             </ul>
         </div>

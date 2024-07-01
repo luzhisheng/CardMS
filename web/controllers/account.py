@@ -1,6 +1,6 @@
 from flask import Blueprint, request, redirect, g, jsonify
 from common.libs.Helper import optRender, genPwd, paging, generateRandomNumber
-from common.models.Model import User, SysLog
+from common.models.Model import User, SysLog, RoleManagement
 from sqlalchemy import or_
 from application import db
 
@@ -32,7 +32,8 @@ def index():
         'user_list': user_list,
         'pages': pages,
         'search_con': request.values,
-        'status_mapping': User.status_mapping
+        'status_mapping': User.status_mapping,
+        "current": "index"
     }
     return optRender('account/index.html', resp)
 
@@ -46,7 +47,8 @@ def set():
                 "0": "没填写",
                 "1": "男",
                 "2": "女"
-            }
+            },
+            "current": "index"
         }
         if request.values.get('id'):
             user_info = User.query.filter_by(uid=request.values.get('id')).first()
@@ -162,3 +164,22 @@ def ops():
         db.session.add(user_info)
         db.session.commit()
         return jsonify(resp)
+
+
+@route_account.route("/role", methods=["GET", "POST"])
+def role():
+    query = RoleManagement.query
+
+    status = request.values.get('status')
+    if status:
+        query = query.filter_by(status=status)
+
+    role_management = query.all()
+
+    resp = {
+        'list': role_management,
+        'search_con': request.values,
+        'status_mapping': User.status_mapping,
+        "current": "role"
+    }
+    return optRender('account/role.html', resp)

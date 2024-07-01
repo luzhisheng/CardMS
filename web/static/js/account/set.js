@@ -9,10 +9,10 @@ var upload = {
         }
         var html = '<img src="' + common_ops.buildPicUrl('account/' + file_key) + '"/>'
             + '<span class="fa fa-times-circle del del_image" data="' + file_key + '"></span>';
-        if ($(".upload_pic_wrap .pic-each").size() > 0) {
-            $(".upload_pic_wrap .pic-each").html(html);
+        if ($(".upload_pic_wrap .pic-account").size() > 0) {
+            $(".upload_pic_wrap .pic-account").html(html);
         } else {
-            $(".upload_pic_wrap").append('<span class="pic-each">' + html + '</span>');
+            $(".upload_pic_wrap").append('<span class="pic-account">' + html + '</span>');
         }
         account_set_ops.delete_img();
     }
@@ -53,7 +53,7 @@ var account_set_ops = {
             var login_pwd_target = $(".wrap_account_set input[name=login_pwd]");
             var login_pwd = login_pwd_target.val();
 
-            if ($(".wrap_account_set .pic-each").size() < 1) {
+            if ($(".wrap_account_set .pic-account").size() < 1) {
                 common_ops.alert("请上传头像~~");
                 return;
             }
@@ -91,7 +91,7 @@ var account_set_ops = {
             btn_target.addClass("disabled");
 
             var data = {
-                avatar: $(".wrap_account_set .pic-each .del_image").attr("data"),
+                avatar: $(".wrap_account_set .pic-account .del_image").attr("data"),
                 nickname: nickname,
                 mobile: mobile,
                 email: email,
