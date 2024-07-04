@@ -36,18 +36,19 @@ def after_request_logging(response):
             else:
                 params = request.form.to_dict()  # 获取表单数据
 
-        log = SysLog(
-            nickname=g.current_user.nickname,
-            account_id=g.current_user.uid,
-            account_type=1,
-            operation=url_path,
-            method=request.method,
-            params=str(params),
-            time=int(duration * 1000),
-            ip=request.remote_addr
-        )
-        db.session.add(log)
-        db.session.commit()
+        if g.current_user:
+            log = SysLog(
+                nickname=g.current_user.nickname,
+                account_id=g.current_user.uid,
+                account_type=1,
+                operation=url_path,
+                method=request.method,
+                params=str(params),
+                time=int(duration * 1000),
+                ip=request.remote_addr
+            )
+            db.session.add(log)
+            db.session.commit()
     return response
 
 

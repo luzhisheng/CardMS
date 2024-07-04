@@ -1,6 +1,6 @@
 from flask import Blueprint, request, redirect, g, jsonify
 from common.libs.Helper import optRender, genPwd, paging, generateRandomNumber
-from common.models.Model import User, SysLog, RoleManagement
+from common.models.Model import User, SysLog, RoleManagement, RolePermission
 from sqlalchemy import or_
 from application import db
 
@@ -26,10 +26,19 @@ def index():
     p = request.values.get('p')
     page_size = 20
     pages, offset, limit = paging(page_size, count, p)
+    users = query.order_by(User.uid.desc()).all()[offset:limit]
 
-    user_list = query.order_by(User.uid.desc()).all()[offset:limit]
+    # 拼接角色数据
+    role_ids = [user.role_management_id for user in users]
+    roles = RoleManagement.query.filter(RoleManagement.id.in_(role_ids)).all()
+    role_dict = {role.id: role.role_name for role in roles}
+
+    for user in users:
+        role_name = role_dict.get(user.role_management_id, "未知角色")
+        user.role_management = role_name
+
     resp = {
-        'user_list': user_list,
+        'user_list': users,
         'pages': pages,
         'search_con': request.values,
         'status_mapping': User.status_mapping,
@@ -48,11 +57,15 @@ def set():
                 "1": "男",
                 "2": "女"
             },
+            'role_mapping': {},
             "current": "index"
         }
         if request.values.get('id'):
             user_info = User.query.filter_by(uid=request.values.get('id')).first()
+            role_management = RoleManagement.query.all()
+            role_dict = {role.id: role.role_name for role in role_management}
             rep["user_info"] = user_info
+            rep["role_mapping"] = role_dict
         return optRender('account/set.html', rep)
     elif request.method == "POST":
         resp = {
@@ -96,6 +109,12 @@ def set():
             resp['msg'] = "请输入符合规范的登录用户名~~"
             return jsonify(resp)
 
+        role_management_id = request.values.get('role_management_id')
+        if role_management_id is None or len(role_management_id) < 1:
+            resp['code'] = -1
+            resp['msg'] = "请输入符合规范的角色~~"
+            return jsonify(resp)
+
         login_pwd = request.values.get('login_pwd')
         if login_pwd is None or len(login_pwd) < 1:
             resp['code'] = -1
@@ -118,6 +137,7 @@ def set():
         user_info.email = email
         user_info.sex = sex
         user_info.login_name = login_name
+        user_info.role_management_id = role_management_id
         db.session.add(user_info)
         db.session.commit()
         return jsonify(resp)
@@ -183,3 +203,57 @@ def role():
         "current": "role"
     }
     return optRender('account/role.html', resp)
+
+
+@route_account.route("/role_set", methods=["GET", "POST"])
+def role_set():
+    if request.method == "GET":
+        rep = {
+            "role_management": {
+                "assigned_people_count": 0,
+            },
+            "current": "role"
+        }
+        if request.values.get('id'):
+            role_management = RoleManagement.query.filter_by(id=request.values.get('id')).first()
+            assigned_people_count = RolePermission.query.filter_by(permission_id=role_management.id).count()
+            rep["role_management"] = role_management
+            rep["role_management"].assigned_people_count = assigned_people_count
+        return optRender('account/role_set.html', rep)
+    elif request.method == "POST":
+        resp = {
+            'code': 200,
+            'msg': "新增角色成功",
+            "data": {}
+        }
+        role_name = request.values.get('role_name')
+        if role_name is None:
+            resp['code'] = -1
+            resp['msg'] = "请输入符合规范的角色名称~~"
+            return jsonify(resp)
+
+        creator = request.values.get('creator')
+        if creator is None:
+            resp['code'] = -1
+            resp['msg'] = "请输入符合规范的创建人~~"
+            return jsonify(resp)
+
+        assigned_people_count = request.values.get('assigned_people_count')
+        if creator is None:
+            resp['code'] = -1
+            resp['msg'] = "请输入符合规范的分配人数~~"
+            return jsonify(resp)
+
+        if request.values.get('id'):
+            # 修改数据
+            role_management = RoleManagement.query.filter_by(id=int(request.values.get('id'))).first()
+            resp['msg'] = "修改用户成功"
+        else:
+            # 新增数据
+            role_management = RoleManagement()
+        role_management.role_name = role_name
+        role_management.assigned_people_count = assigned_people_count
+        role_management.creator = creator
+        db.session.add(role_management)
+        db.session.commit()
+        return jsonify(resp)

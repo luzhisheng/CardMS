@@ -50,6 +50,9 @@ var account_set_ops = {
             var login_name_target = $(".wrap_account_set input[name=login_name]");
             var login_name = login_name_target.val();
 
+            var role_management_target = $(".wrap_account_set select[name=role_management]");
+            var role_management = role_management_target.val();
+
             var login_pwd_target = $(".wrap_account_set input[name=login_pwd]");
             var login_pwd = login_pwd_target.val();
 
@@ -83,6 +86,11 @@ var account_set_ops = {
                 return false;
             }
 
+            if (role_management.length < 1) {
+                common_ops.tip("请输入符合规范的角色~~", role_management_target);
+                return false;
+            }
+
             if (login_pwd.length < 6) {
                 common_ops.tip("请输入符合规范的登录密码~~", login_pwd_target);
                 return false;
@@ -97,6 +105,7 @@ var account_set_ops = {
                 email: email,
                 sex: sex,
                 login_name: login_name,
+                role_management_id: role_management,
                 login_pwd: login_pwd,
                 id: $(".wrap_account_set input[name=id]").val()
             };

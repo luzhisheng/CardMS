@@ -1,0 +1,296 @@
+{% extends "common/layout_main.html" %}
+{% block content %}
+    {% include "common/tab_account.html" %}
+    <div class="row m-t  wrap_account_role_set">
+        <div class="col-lg-12">
+            <h2 class="text-center">账号设置</h2>
+            <div class="form-horizontal m-t m-b">
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">角色名称:</label>
+                    <div class="col-lg-10">
+                        <input type="text" name="role_name" class="form-control" placeholder="请输入角色名称~~"
+                               value="{{ role_management.role_name }}">
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">分配人数:</label>
+                    <div class="col-lg-10">
+                        <input type="text" name="assigned_people_count" readonly="readonly" class="form-control"
+                               autocomplete="off"
+                               placeholder="请输入分配人数~~" value="{{ role_management.assigned_people_count }}">
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">创建人(昵称):</label>
+                    <div class="col-lg-10">
+                        <input type="text" name="creator" class="form-control" readonly="readonly"
+                               placeholder="请输入创建人(昵称)~~"
+                               value="{{ current_user.nickname }}">
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">仪表盘权限:</label>
+                    <div class="col-lg-10">
+                        <div class="permissions-body">
+                            <label class="control-label"><i>仪表盘:</i></label>
+                            <div class="container mt-3">
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 全选
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 查询
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">账户管理权限:</label>
+                    <div class="col-lg-10">
+                        <div class="permissions-body">
+                            <label class="control-label"><i>账户列表:</i></label>
+                            <div class="container mt-3">
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 全选
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 查询
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 新增
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 更新
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 删除
+                                </label>
+                            </div>
+                        </div>
+                        <div class="permissions-body">
+                            <label class="control-label"><i>角色管理:</i></label>
+                            <div class="container mt-3">
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 全选
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 查询
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 新增
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 更新
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 删除
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">卡券管理权限:</label>
+                    <div class="col-lg-10">
+                        <div class="permissions-body">
+                            <label class="control-label"><i>卡券列表:</i></label>
+                            <div class="container mt-3">
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 全选
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 查询
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 新增
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 更新
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 删除
+                                </label>
+                            </div>
+                        </div>
+                        <div class="permissions-body">
+                            <label class="control-label"><i>卡券分类:</i></label>
+                            <div class="container mt-3">
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 全选
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 查询
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 新增
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 更新
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 删除
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">会员管理权限:</label>
+                    <div class="col-lg-10">
+                        <div class="permissions-body">
+                            <label class="control-label"><i>会员列表:</i></label>
+                            <div class="container mt-3">
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 全选
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 查询
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 新增
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 更新
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 删除
+                                </label>
+                            </div>
+                        </div>
+                        <div class="permissions-body">
+                            <label class="control-label"><i>会员评论:</i></label>
+                            <div class="container mt-3">
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 全选
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 查询
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 新增
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 更新
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 删除
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">财务管理权限:</label>
+                    <div class="col-lg-10">
+                        <div class="permissions-body">
+                            <label class="control-label"><i>订单列表:</i></label>
+                            <div class="container mt-3">
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 全选
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 查询
+                                </label>
+                            </div>
+                        </div>
+                        <div class="permissions-body">
+                            <label class="control-label"><i>财务流水:</i></label>
+                            <div class="container mt-3">
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 全选
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 查询
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">统计管理权限:</label>
+                    <div class="col-lg-10">
+                        <div class="permissions-body">
+                            <label class="control-label"><i>财务统计:</i></label>
+                            <div class="container mt-3">
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 全选
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 查询
+                                </label>
+                            </div>
+                        </div>
+                        <div class="permissions-body">
+                            <label class="control-label"><i>售卖统计:</i></label>
+                            <div class="container mt-3">
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 全选
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 查询
+                                </label>
+                            </div>
+                        </div>
+                        <div class="permissions-body">
+                            <label class="control-label"><i>会员消费统计:</i></label>
+                            <div class="container mt-3">
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 全选
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 查询
+                                </label>
+                            </div>
+                        </div>
+                        <div class="permissions-body">
+                            <label class="control-label"><i>分享统计:</i></label>
+                            <div class="container mt-3">
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 全选
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 查询
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">系统管理权限:</label>
+                    <div class="col-lg-10">
+                        <div class="permissions-body">
+                            <label class="control-label"><i>用户行为日志:</i></label>
+                            <div class="container mt-3">
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 全选
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" value=""> 查询
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <div class="col-lg-4 col-lg-offset-2">
+                        <input type="hidden" name="id" value="{{ role_management.id }}">
+                        <button class="btn btn-w-m btn-outline btn-primary save">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script src="{{ buildStaticUrl('/js/account/role_set.js') }}"></script>
+{% endblock %}
