@@ -20,7 +20,7 @@ var account_role_ops = {
         var callback = {
             'ok': function () {
                 $.ajax({
-                    url: common_ops.buildUrl("/account/ops"),
+                    url: common_ops.buildUrl("/account/role_ops"),
                     type: 'POST',
                     data: {
                         act: act,

@@ -39,21 +39,21 @@
                 {% if list %}
                     {% for item in list %}
                         <tr>
-                            <td>{{ item.role_name }}</td>
-                            <td>{{ item.assigned_people_count }}</td>
-                            <td>{{ item.creator }}</td>
-                            <td>{{ item.created_time }}</td>
+                            <td>{{ item.role.role_name }}</td>
+                            <td>{{ item.user_count }}</td>
+                            <td>{{ item.role.creator }}</td>
+                            <td>{{ item.role.created_time }}</td>
                             <td>
-                                {% if item.status == 1 %}
-                                    <a class="m-l" href="{{ buildUrl('/account/role_set') }}?id={{ item.id }}">
+                                {% if item.role.status == 1 %}
+                                    <a class="m-l" href="{{ buildUrl('/account/role_set') }}?id={{ item.role.id }}">
                                         <i class="fa fa-edit fa-lg"></i>
                                     </a>
 
-                                    <a class="m-l remove" href="javascript:void(0);" data="{{ item.id }}">
+                                    <a class="m-l remove" href="javascript:void(0);" data="{{ item.role.id }}">
                                         <i class="fa fa-trash fa-lg"></i>
                                     </a>
                                 {% else %}
-                                    <a class="m-l recover" href="javascript:void(0);" data="{{ item.id }}">
+                                    <a class="m-l recover" href="javascript:void(0);" data="{{ item.role.id }}">
                                         <i class="fa fa-rotate-left fa-lg"></i>
                                     </a>
                                 {% endif %}

@@ -1,7 +1,7 @@
 from flask import Blueprint, request, redirect, g, jsonify
 from common.libs.Helper import optRender, genPwd, paging, generateRandomNumber
 from common.models.Model import User, SysLog, RoleManagement, RolePermission
-from sqlalchemy import or_
+from sqlalchemy import or_, func
 from application import db
 
 route_account = Blueprint("account_page", __name__)
@@ -186,18 +186,63 @@ def ops():
         return jsonify(resp)
 
 
+@route_account.route("/role_ops", methods=["POST"])
+def role_ops():
+    req = request.values
+    if req.get('act') == "remove":
+        resp = {
+            'code': 200,
+            'msg': "删除角色成功",
+            "data": {}
+        }
+        role_management = RoleManagement.query.filter_by(id=req.get('id')).first()
+        role_management.status = -1
+        db.session.add(role_management)
+        db.session.commit()
+        return jsonify(resp)
+    else:
+        resp = {
+            'code': 200,
+            'msg': "恢复角色成功",
+            "data": {}
+        }
+        role_management = RoleManagement.query.filter_by(id=req.get('id')).first()
+        role_management.status = 1
+        db.session.add(role_management)
+        db.session.commit()
+        return jsonify(resp)
+
+
 @route_account.route("/role", methods=["GET", "POST"])
 def role():
-    query = RoleManagement.query
+    query = db.session.query(RoleManagement)
 
     status = request.values.get('status')
     if status:
         query = query.filter_by(status=status)
 
-    role_management = query.all()
+    # 使用外连接查询每个角色的分配人数
+    role_with_count_query = (
+        query
+        .outerjoin(User, RoleManagement.id == User.role_management_id)
+        .with_entities(RoleManagement, func.count(User.uid).label('user_count'))
+        .group_by(RoleManagement.id)
+    )
+
+    # 获取查询结果
+    role_management_with_count = role_with_count_query.all()
+
+    # 格式化结果
+    role_management_list = [
+        {
+            'role': role,
+            'user_count': user_count
+        }
+        for role, user_count in role_management_with_count
+    ]
 
     resp = {
-        'list': role_management,
+        'list': role_management_list,
         'search_con': request.values,
         'status_mapping': User.status_mapping,
         "current": "role"
@@ -238,12 +283,6 @@ def role_set():
             resp['msg'] = "请输入符合规范的创建人~~"
             return jsonify(resp)
 
-        assigned_people_count = request.values.get('assigned_people_count')
-        if creator is None:
-            resp['code'] = -1
-            resp['msg'] = "请输入符合规范的分配人数~~"
-            return jsonify(resp)
-
         if request.values.get('id'):
             # 修改数据
             role_management = RoleManagement.query.filter_by(id=int(request.values.get('id'))).first()
@@ -252,7 +291,6 @@ def role_set():
             # 新增数据
             role_management = RoleManagement()
         role_management.role_name = role_name
-        role_management.assigned_people_count = assigned_people_count
         role_management.creator = creator
         db.session.add(role_management)
         db.session.commit()

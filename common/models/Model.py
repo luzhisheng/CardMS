@@ -137,7 +137,6 @@ class RoleManagement(db.Model):
     __tablename__ = 'role_management'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True, comment='主键ID')
     role_name = db.Column(db.String(100), nullable=False, comment='角色名称')
-    assigned_people_count = db.Column(db.Integer, nullable=False, default=0, comment='分配人数')
     creator = db.Column(db.String(100), nullable=False, comment='创建人')
     status = db.Column(db.Integer, nullable=False, default=1, comment='1：有效 0：无效')
     created_time = db.Column(db.DateTime, nullable=False, server_default=db.func.current_timestamp(),

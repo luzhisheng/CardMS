@@ -36,9 +36,6 @@ var account_role_set_ops = {
             var creator_target = $(".wrap_account_role_set input[name=creator]");
             var creator = creator_target.val();
 
-            var assigned_people_count_target = $(".wrap_account_role_set input[name=assigned_people_count]");
-            var assigned_people_count = assigned_people_count_target.val();
-
             if (role_name.length < 1) {
                 common_ops.tip("请输入符合规范的角色名称~~", role_name_target);
                 return false;
@@ -49,16 +46,10 @@ var account_role_set_ops = {
                 return false;
             }
 
-            if (assigned_people_count.length < 1) {
-                common_ops.tip("请输入符合规范的分配人数~~", assigned_people_count_target);
-                return false;
-            }
-
             btn_target.addClass("disabled");
 
             var data = {
                 role_name: role_name,
-                assigned_people_count: assigned_people_count,
                 creator: creator,
                 id: $(".wrap_account_role_set input[name=id]").val()
             };
