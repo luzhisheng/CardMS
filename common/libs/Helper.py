@@ -1,5 +1,7 @@
 from flask import g, render_template, request
-import hashlib
+from flask_login import current_user
+from functools import wraps
+from flask import abort
 import base64
 import datetime
 import random
@@ -8,15 +10,13 @@ import re
 
 def genPwd(pwd, salt):
     """
-    md5密码加密
+    密码拼接
     :param pwd:
     :param salt:
     :return:
     """
-    m = hashlib.md5()
     str = f"{base64.encodebytes(pwd.encode('utf-8'))}-{salt}"
-    m.update(str.encode("utf-8"))
-    return m.hexdigest()
+    return str
 
 
 def generateRandomNumber(length=4):
@@ -28,19 +28,6 @@ def generateRandomNumber(length=4):
     return "salt" + ''.join([str(random.randint(0, 9)) for _ in range(length)])
 
 
-def geneAuthCode(user_info):
-    """
-    cookie加密
-    :param user_info:
-    :return:
-    """
-    m = hashlib.md5()
-    str = f"{user_info.login_name}-{user_info.login_salt}-{user_info.login_pwd}-{user_info.uid}"
-    base64.encodebytes(str.encode('utf-8'))
-    m.update(str.encode("utf-8"))
-    return m.hexdigest()
-
-
 def optRender(template, context=None):
     """
     统一渲染方法
@@ -50,8 +37,8 @@ def optRender(template, context=None):
     """
     if context is None:
         context = {}
-    if 'current_user' in g:
-        context['current_user'] = g.current_user
+    if current_user.is_authenticated:
+        context['current_user'] = current_user
     return render_template(template, **context)
 
 
@@ -224,3 +211,22 @@ def selectFilterObj(obj, field):
             continue
         ret.append(getattr(item, field))
     return ret
+
+
+def permission_required(permission):
+    print(permission)
+    """
+    用户权限检查器
+    :param permission:
+    :return:
+    """
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            if not current_user.is_authenticated:
+                return optRender("user/login.html")
+            if not current_user.role or permission not in current_user.role.permissions.split(','):
+                abort(403)
+            return f(*args, **kwargs)
+        return decorated_function
+    return decorator

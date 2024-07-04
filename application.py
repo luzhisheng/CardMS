@@ -2,6 +2,7 @@ import os
 from common.libs.UrlManager import UrlManager
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager
 
 
 class Application(Flask):
@@ -20,6 +21,11 @@ app = Application(
     __name__,
     template_folder=os.getcwd() + "/web/templates/"
 )
+
+app.secret_key = 'ayf'
+
+login_manager = LoginManager()
+login_manager.init_app(app)
 
 # 全局函数 网页模板语法
 app.add_template_global(UrlManager.buildMemberImageUrl, 'buildMemberImageUrl')

@@ -1,10 +1,10 @@
 from flask import Blueprint, request, jsonify
-from flask import make_response, redirect, g
-from common.libs.Helper import optRender, genPwd, geneAuthCode
+from flask import make_response, redirect
+from flask_login import login_user, login_required, current_user
+from common.libs.Helper import optRender, genPwd, permission_required
 from application import db
 import json
 from common.models.Model import User
-
 
 route_user = Blueprint("user_page", __name__)
 
@@ -13,7 +13,7 @@ route_user = Blueprint("user_page", __name__)
 def login():
     if request.method == "GET":
         return optRender("user/login.html")
-    else:
+    elif request.method == "POST":
         resp = {
             'code': 200,
             'msg': "登陆成功",
@@ -39,8 +39,8 @@ def login():
             resp['msg'] = "请输入正确的用户名/密码-3"
             return jsonify(resp)
 
-        # 密码加密
-        if user_info.login_pwd != genPwd(login_pwd, user_info.login_salt):
+        # 比对密码
+        if not user_info.check_password(genPwd(login_pwd, user_info.login_salt)):
             resp['code'] = -1
             resp['msg'] = "请输入正确的用户名/密码-4"
             return jsonify(resp)
@@ -52,7 +52,7 @@ def login():
 
         # 设置cookie
         response = make_response(json.dumps(resp))
-        response.set_cookie("file_server", f"{geneAuthCode(user_info)}#{user_info.uid}")
+        login_user(user_info)
         return response
 
 
@@ -80,7 +80,7 @@ def edit():
             return jsonify(resp)
 
         # 更新数据库数据
-        user_info = g.current_user
+        user_info = current_user
         user_info.nickname = nickname
         user_info.email = email
         db.session.add(user_info)
@@ -102,7 +102,7 @@ def reset_pwd():
         old_password = req['old_password'] if 'old_password' in req else ''
         new_password = req['new_password'] if 'new_password' in req else ''
 
-        user_info = g.current_user
+        user_info = current_user
 
         if old_password is None:
             resp['code'] = -1
@@ -124,7 +124,7 @@ def reset_pwd():
 
         # 修改密码后设置cookie
         response = make_response(json.dumps(resp))
-        response.set_cookie("file_server", f"{geneAuthCode(user_info)}#{user_info.uid}")
+        login_user(user_info)
         return response
 
 

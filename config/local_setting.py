@@ -3,6 +3,7 @@ SERVER_PORT = 5555
 SERVER_HOST = "0.0.0.0"
 SERVER_DEBUG = False
 SQLALCHEMY_ECHO = False
+SEO_TITLE = "后台首页"
 
 # 图片上传目录
 UPLOAD = {

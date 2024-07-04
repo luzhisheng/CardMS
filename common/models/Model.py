@@ -1,4 +1,6 @@
+from werkzeug.security import generate_password_hash, check_password_hash
 from application import db
+from flask_login import UserMixin
 import datetime
 
 
@@ -89,7 +91,7 @@ class CardStockChangeLog(db.Model):
             CardStockChangeLog.created_time.desc()).limit(limit).all()
 
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     """
     管理员账户表
     """
@@ -103,13 +105,24 @@ class User(db.Model):
     avatar = db.Column(db.String(64), nullable=False, server_default=db.FetchedValue(), info='头像')
     login_name = db.Column(db.String(20), nullable=False, unique=True, server_default=db.FetchedValue(),
                            info='登录用户名')
-    login_pwd = db.Column(db.String(32), nullable=False, server_default=db.FetchedValue(), info='登录密码')
+    login_pwd = db.Column(db.String(255), nullable=False, server_default=db.FetchedValue(), info='登录密码')
     login_salt = db.Column(db.String(32), nullable=False, server_default=db.FetchedValue(),
                            info='登录密码的随机加密秘钥')
     role_management_id = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue(), info='角色表的id')
     status = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue(), info='1：有效 0：无效')
     updated_time = db.Column(db.DateTime, nullable=False, server_default=db.FetchedValue(), info='最后一次更新时间')
     created_time = db.Column(db.DateTime, nullable=False, server_default=db.FetchedValue(), info='插入时间')
+
+    def get_id(self):
+        return str(self.uid)
+
+    def set_password(self, password):
+        # 设置密码
+        self.login_pwd = generate_password_hash(password)
+
+    def check_password(self, password):
+        # 验证密码
+        return check_password_hash(self.login_pwd, password)
 
     status_mapping = {
         "1": "正常",
