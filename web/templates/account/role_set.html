@@ -3,13 +3,13 @@
     {% include "common/tab_account.html" %}
     <div class="row m-t  wrap_account_role_set">
         <div class="col-lg-12">
-            <h2 class="text-center">账号设置</h2>
+            <h2 class="text-center">角色权限配置</h2>
             <div class="form-horizontal m-t m-b">
                 <div class="form-group">
                     <label class="col-lg-2 control-label">角色名称:</label>
                     <div class="col-lg-10">
                         <input type="text" name="role_name" class="form-control" placeholder="请输入角色名称~~"
-                               value="{{ role_management.role_name }}">
+                               value="{{ role.role_name }}">
                     </div>
                 </div>
                 <div class="hr-line-dashed"></div>
@@ -29,10 +29,10 @@
                             <label class="control-label"><i>仪表盘:</i></label>
                             <div class="container mt-3">
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 全选
+                                    <input name="selectAll" type="checkbox" value=""> 全选
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 查询
+                                    <input name="admin_index" class="permission" type="checkbox" value="1"> 查询
                                 </label>
                             </div>
                         </div>
@@ -46,19 +46,16 @@
                             <label class="control-label"><i>账户列表:</i></label>
                             <div class="container mt-3">
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 全选
+                                    <input name="selectAll" type="checkbox" value=""> 全选
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 查询
+                                    <input name="account_index" class="permission" type="checkbox" value="2"> 查询
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 新增
+                                    <input name="account_set" class="permission" type="checkbox" value="3"> 新增/更新
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 更新
-                                </label>
-                                <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 删除
+                                    <input name="account_ops" class="permission" type="checkbox" value="4"> 删除
                                 </label>
                             </div>
                         </div>
@@ -66,19 +63,16 @@
                             <label class="control-label"><i>角色管理:</i></label>
                             <div class="container mt-3">
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 全选
+                                    <input name="selectAll" type="checkbox" value=""> 全选
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 查询
+                                    <input name="account_role" class="permission" type="checkbox" value="5"> 查询
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 新增
+                                    <input name="account_role_set" class="permission" type="checkbox" value="6"> 新增/更新
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 更新
-                                </label>
-                                <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 删除
+                                    <input name="account_role_ops" class="permission" type="checkbox" value="7"> 删除
                                 </label>
                             </div>
                         </div>
@@ -92,19 +86,16 @@
                             <label class="control-label"><i>卡券列表:</i></label>
                             <div class="container mt-3">
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 全选
+                                    <input name="selectAll" type="checkbox" value=""> 全选
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 查询
+                                    <input name="card_index" class="permission" type="checkbox" value="8"> 查询
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 新增
+                                    <input name="card_set" class="permission" type="checkbox" value="9"> 新增/更新
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 更新
-                                </label>
-                                <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 删除
+                                    <input name="card_ops" class="permission" type="checkbox" value="10"> 删除
                                 </label>
                             </div>
                         </div>
@@ -112,19 +103,16 @@
                             <label class="control-label"><i>卡券分类:</i></label>
                             <div class="container mt-3">
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 全选
+                                    <input name="selectAll" type="checkbox" value=""> 全选
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 查询
+                                    <input name="card_cat" class="permission" type="checkbox" value="11"> 查询
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 新增
+                                    <input name="card_cat_set" class="permission" type="checkbox" value="12"> 新增/更新
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 更新
-                                </label>
-                                <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 删除
+                                    <input name="card_cat_ops" class="permission" type="checkbox" value="13"> 删除
                                 </label>
                             </div>
                         </div>
@@ -138,19 +126,16 @@
                             <label class="control-label"><i>会员列表:</i></label>
                             <div class="container mt-3">
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 全选
+                                    <input name="selectAll" type="checkbox" value=""> 全选
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 查询
+                                    <input name="member_index" class="permission" type="checkbox" value="14"> 查询
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 新增
+                                    <input name="member_set" class="permission" type="checkbox" value="15"> 新增/更新
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 更新
-                                </label>
-                                <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 删除
+                                    <input name="member_ops" class="permission" type="checkbox" value="16"> 删除
                                 </label>
                             </div>
                         </div>
@@ -158,19 +143,16 @@
                             <label class="control-label"><i>会员评论:</i></label>
                             <div class="container mt-3">
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 全选
+                                    <input name="selectAll" type="checkbox" value=""> 全选
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 查询
+                                    <input name="member_comment" class="permission" type="checkbox" value="17"> 查询
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 新增
+                                    <input name="member_comment_set" class="permission" type="checkbox" value="18"> 新增/更新
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 更新
-                                </label>
-                                <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 删除
+                                    <input name="member_comment_ops" class="permission" type="checkbox" value="19"> 删除
                                 </label>
                             </div>
                         </div>
@@ -184,10 +166,10 @@
                             <label class="control-label"><i>订单列表:</i></label>
                             <div class="container mt-3">
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 全选
+                                    <input name="selectAll" type="checkbox" value=""> 全选
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 查询
+                                    <input name="finance_index" name="finance_index" class="permission" type="checkbox" value="20"> 查询
                                 </label>
                             </div>
                         </div>
@@ -195,10 +177,10 @@
                             <label class="control-label"><i>财务流水:</i></label>
                             <div class="container mt-3">
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 全选
+                                    <input name="selectAll" type="checkbox" value=""> 全选
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 查询
+                                    <input name="finance_account" class="permission" type="checkbox" value="21"> 查询
                                 </label>
                             </div>
                         </div>
@@ -212,10 +194,10 @@
                             <label class="control-label"><i>财务统计:</i></label>
                             <div class="container mt-3">
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 全选
+                                    <input name="selectAll" type="checkbox" value=""> 全选
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 查询
+                                    <input name="stat_index" class="permission" type="checkbox" value="22"> 查询
                                 </label>
                             </div>
                         </div>
@@ -223,10 +205,10 @@
                             <label class="control-label"><i>售卖统计:</i></label>
                             <div class="container mt-3">
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 全选
+                                    <input name="selectAll" type="checkbox" value=""> 全选
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 查询
+                                    <input name="stat_card" class="permission" type="checkbox" value="23"> 查询
                                 </label>
                             </div>
                         </div>
@@ -234,10 +216,10 @@
                             <label class="control-label"><i>会员消费统计:</i></label>
                             <div class="container mt-3">
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 全选
+                                    <input name="selectAll" type="checkbox" value=""> 全选
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 查询
+                                    <input name="stat_member" class="permission" type="checkbox" value="24"> 查询
                                 </label>
                             </div>
                         </div>
@@ -245,10 +227,10 @@
                             <label class="control-label"><i>分享统计:</i></label>
                             <div class="container mt-3">
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 全选
+                                    <input name="selectAll" type="checkbox" value=""> 全选
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 查询
+                                    <input name="stat_share" class="permission" type="checkbox" value="25"> 查询
                                 </label>
                             </div>
                         </div>
@@ -262,10 +244,10 @@
                             <label class="control-label"><i>用户行为日志:</i></label>
                             <div class="container mt-3">
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 全选
+                                    <input name="selectAll" type="checkbox" value=""> 全选
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input type="checkbox" value=""> 查询
+                                    <input name="stat_index" class="permission" type="checkbox" value="26"> 查询
                                 </label>
                             </div>
                         </div>
@@ -274,7 +256,7 @@
                 <div class="hr-line-dashed"></div>
                 <div class="form-group">
                     <div class="col-lg-4 col-lg-offset-2">
-                        <input type="hidden" name="id" value="{{ role_management.id }}">
+                        <input type="hidden" name="id" value="{{ role.id }}">
                         <button class="btn btn-w-m btn-outline btn-primary save">保存</button>
                     </div>
                 </div>

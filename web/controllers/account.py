@@ -1,8 +1,9 @@
 from flask import Blueprint, request, redirect, g, jsonify
-from common.libs.Helper import optRender, genPwd, paging, generateRandomNumber
-from common.models.Model import User, SysLog, RoleManagement, RolePermission
+from common.libs.Helper import optRender, genPwd, paging, generateRandomNumber, permission_required
+from common.models.Model import User, SysLog, Role, RolePermission, Permission
 from sqlalchemy import or_, func
 from application import db
+from sqlalchemy.exc import IntegrityError
 
 route_account = Blueprint("account_page", __name__)
 
@@ -29,13 +30,13 @@ def index():
     users = query.order_by(User.uid.desc()).all()[offset:limit]
 
     # 拼接角色数据
-    role_ids = [user.role_management_id for user in users]
-    roles = RoleManagement.query.filter(RoleManagement.id.in_(role_ids)).all()
+    role_ids = [user.role_id for user in users]
+    roles = Role.query.filter(Role.id.in_(role_ids)).all()
     role_dict = {role.id: role.role_name for role in roles}
 
     for user in users:
-        role_name = role_dict.get(user.role_management_id, "未知角色")
-        user.role_management = role_name
+        role_name = role_dict.get(user.role_id, "未知角色")
+        user.role = role_name
 
     resp = {
         'user_list': users,
@@ -62,10 +63,10 @@ def set():
         }
         if request.values.get('id'):
             user_info = User.query.filter_by(uid=request.values.get('id')).first()
-            role_management = RoleManagement.query.all()
-            role_dict = {role.id: role.role_name for role in role_management}
             rep["user_info"] = user_info
-            rep["role_mapping"] = role_dict
+        roles = Role.query.all()
+        role_dict = {role.id: role.role_name for role in roles}
+        rep["role_mapping"] = role_dict
         return optRender('account/set.html', rep)
     elif request.method == "POST":
         resp = {
@@ -109,8 +110,8 @@ def set():
             resp['msg'] = "请输入符合规范的登录用户名~~"
             return jsonify(resp)
 
-        role_management_id = request.values.get('role_management_id')
-        if role_management_id is None or len(role_management_id) < 1:
+        role_id = request.values.get('role_id')
+        if role_id is None or len(role_id) < 1:
             resp['code'] = -1
             resp['msg'] = "请输入符合规范的角色~~"
             return jsonify(resp)
@@ -137,7 +138,7 @@ def set():
         user_info.email = email
         user_info.sex = sex
         user_info.login_name = login_name
-        user_info.role_management_id = role_management_id
+        user_info.role_id = role_id
         db.session.add(user_info)
         db.session.commit()
         return jsonify(resp)
@@ -195,9 +196,9 @@ def role_ops():
             'msg': "删除角色成功",
             "data": {}
         }
-        role_management = RoleManagement.query.filter_by(id=req.get('id')).first()
-        role_management.status = -1
-        db.session.add(role_management)
+        role = Role.query.filter_by(id=req.get('id')).first()
+        role.status = -1
+        db.session.add(role)
         db.session.commit()
         return jsonify(resp)
     else:
@@ -206,16 +207,16 @@ def role_ops():
             'msg': "恢复角色成功",
             "data": {}
         }
-        role_management = RoleManagement.query.filter_by(id=req.get('id')).first()
-        role_management.status = 1
-        db.session.add(role_management)
+        role = Role.query.filter_by(id=req.get('id')).first()
+        role.status = 1
+        db.session.add(role)
         db.session.commit()
         return jsonify(resp)
 
 
 @route_account.route("/role", methods=["GET", "POST"])
 def role():
-    query = db.session.query(RoleManagement)
+    query = db.session.query(Role)
 
     status = request.values.get('status')
     if status:
@@ -224,25 +225,25 @@ def role():
     # 使用外连接查询每个角色的分配人数
     role_with_count_query = (
         query
-        .outerjoin(User, RoleManagement.id == User.role_management_id)
-        .with_entities(RoleManagement, func.count(User.uid).label('user_count'))
-        .group_by(RoleManagement.id)
+        .outerjoin(User, Role.id == User.role_id)
+        .with_entities(Role, func.count(User.uid).label('user_count'))
+        .group_by(Role.id)
     )
 
     # 获取查询结果
-    role_management_with_count = role_with_count_query.all()
+    role_with_count = role_with_count_query.all()
 
     # 格式化结果
-    role_management_list = [
+    role_list = [
         {
             'role': role,
             'user_count': user_count
         }
-        for role, user_count in role_management_with_count
+        for role, user_count in role_with_count
     ]
 
     resp = {
-        'list': role_management_list,
+        'list': role_list,
         'search_con': request.values,
         'status_mapping': User.status_mapping,
         "current": "role"
@@ -254,16 +255,17 @@ def role():
 def role_set():
     if request.method == "GET":
         rep = {
-            "role_management": {
+            "role": {
                 "assigned_people_count": 0,
             },
             "current": "role"
         }
         if request.values.get('id'):
-            role_management = RoleManagement.query.filter_by(id=request.values.get('id')).first()
-            assigned_people_count = RolePermission.query.filter_by(permission_id=role_management.id).count()
-            rep["role_management"] = role_management
-            rep["role_management"].assigned_people_count = assigned_people_count
+            role = Role.query.filter_by(id=request.values.get('id')).first()
+            if role:
+                assigned_people_count = RolePermission.query.filter_by(permission_id=role.id).count()
+                rep["role"] = role
+                rep["role"].assigned_people_count = assigned_people_count
         return optRender('account/role_set.html', rep)
     elif request.method == "POST":
         resp = {
@@ -283,15 +285,38 @@ def role_set():
             resp['msg'] = "请输入符合规范的创建人~~"
             return jsonify(resp)
 
+        # 获取权限ID
+        permissions_id = request.values.getlist('permissions_id[]')
+        print(permissions_id)
+
         if request.values.get('id'):
             # 修改数据
-            role_management = RoleManagement.query.filter_by(id=int(request.values.get('id'))).first()
-            resp['msg'] = "修改用户成功"
+            role = Role.query.filter_by(id=int(request.values.get('id'))).first()
+            if not role:
+                resp['code'] = -1
+                resp['msg'] = "角色不存在"
+                return jsonify(resp)
+            resp['msg'] = "修改角色成功"
         else:
             # 新增数据
-            role_management = RoleManagement()
-        role_management.role_name = role_name
-        role_management.creator = creator
-        db.session.add(role_management)
-        db.session.commit()
+            role = Role()
+            resp['msg'] = "新增角色成功"
+
+        # 获取权限ID
+        permissions_id = request.values.getlist('permissions_id[]')
+        # 更新角色的权限
+        role.permissions.clear()  # 清空现有权限
+        for perm_id in permissions_id:
+            permission = Permission.query.get(perm_id)
+            if permission:
+                role.permissions.append(permission)
+
+        db.session.add(role)
+        try:
+            db.session.commit()
+        except IntegrityError as e:
+            db.session.rollback()
+            resp['code'] = -1
+            resp['msg'] = f"数据库错误: {str(e)}"
+            return jsonify(resp)
         return jsonify(resp)

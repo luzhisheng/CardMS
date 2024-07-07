@@ -25,7 +25,8 @@ def after_request_logging(response):
                 params = request.get_json()  # 获取JSON数据
             else:
                 params = request.form.to_dict()  # 获取表单数据
-        if current_user:
+
+        if current_user.is_authenticated:
             log = SysLog(
                 nickname=current_user.nickname,
                 account_id=current_user.uid,

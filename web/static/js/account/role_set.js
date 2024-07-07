@@ -1,25 +1,26 @@
 ;
-var upload = {
-    error: function (msg) {
-        common_ops.alert(msg);
-    },
-    success: function (file_key) {
-        if (!file_key) {
-            return;
-        }
-        var html = '<img src="' + common_ops.buildPicUrl('account/' + file_key) + '"/>'
-            + '<span class="fa fa-times-circle del del_image" data="' + file_key + '"></span>';
-        if ($(".upload_pic_wrap .pic-account").size() > 0) {
-            $(".upload_pic_wrap .pic-account").html(html);
-        } else {
-            $(".upload_pic_wrap").append('<span class="pic-account">' + html + '</span>');
-        }
-        account_set_ops.delete_img();
-    }
-};
 var account_role_set_ops = {
     init: function () {
         this.eventBind();
+        this.bindEvents();
+    },
+    bindEvents: function () {
+        $('input[name=selectAll]').change(this.handleSelectAllChange);
+        $('.permission').change(this.handlePermissionChange);
+    },
+    handleSelectAllChange: function () {
+        var parentDiv = $(this).closest('div');
+        parentDiv.find('.permission').prop('checked', $(this).prop('checked'));
+    },
+    handlePermissionChange: function () {
+        var parentDiv = $(this).closest('div');
+        if (!$(this).prop('checked')) {
+            parentDiv.find('input[name=selectAll]').prop('checked', false);
+        } else {
+            if (parentDiv.find('.permission:checked').length == parentDiv.find('.permission').length) {
+                parentDiv.find('input[name=selectAll]').prop('checked', true);
+            }
+        }
     },
     eventBind: function () {
 
@@ -36,6 +37,21 @@ var account_role_set_ops = {
             var creator_target = $(".wrap_account_role_set input[name=creator]");
             var creator = creator_target.val();
 
+            // 定义所有权限的名称
+            var permissionNames = [
+                "admin_index", "account_set", "account_ops", "account_role", "account_role_set", "account_role_ops",
+                "card_index", "card_set", "card_ops", "card_cat", "card_cat_set", "card_cat_ops",
+                "member_index", "member_set", "member_ops", "member_comment", "member_comment_set", "member_comment_ops",
+                "finance_index", "finance_account", "stat_index", "stat_card", "stat_member", "stat_share", "sys_index"
+            ];
+
+            // 收集所有权限的值
+            var permissions = permissionNames.map(function (name) {
+                return $(".wrap_account_role_set input[name=" + name + "]:checked").val();
+            }).filter(function (value) {
+                return value; // 过滤掉空值
+            });
+
             if (role_name.length < 1) {
                 common_ops.tip("请输入符合规范的角色名称~~", role_name_target);
                 return false;
@@ -51,6 +67,7 @@ var account_role_set_ops = {
             var data = {
                 role_name: role_name,
                 creator: creator,
+                permissions_id: permissions,
                 id: $(".wrap_account_role_set input[name=id]").val()
             };
 

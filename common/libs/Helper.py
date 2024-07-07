@@ -1,4 +1,5 @@
-from flask import g, render_template, request
+from flask import render_template, request
+from common.models.Model import Role, RolePermission
 from flask_login import current_user
 from functools import wraps
 from flask import abort
@@ -213,20 +214,40 @@ def selectFilterObj(obj, field):
     return ret
 
 
-def permission_required(permission):
-    print(permission)
+def has_permission(role_id, permission):
     """
-    用户权限检查器
+    判断是否存在权限
+    :param role_id:
     :param permission:
     :return:
     """
+    role = Role.query.get(role_id)
+    if role:
+        permissions = role.permissions
+        if permission in [p.name for p in permissions]:
+            return True
+        else:
+            return False
+    else:
+        return False
+
+
+def permission_required(permission):
+    """
+    自定义用户权限检查器
+    :param permission:
+    :return:
+    """
+
     def decorator(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):
             if not current_user.is_authenticated:
                 return optRender("user/login.html")
-            if not current_user.role or permission not in current_user.role.permissions.split(','):
+            if not has_permission(current_user.role_id, permission):
                 abort(403)
             return f(*args, **kwargs)
+
         return decorated_function
+
     return decorator

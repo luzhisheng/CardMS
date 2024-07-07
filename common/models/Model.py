@@ -108,7 +108,7 @@ class User(UserMixin, db.Model):
     login_pwd = db.Column(db.String(255), nullable=False, server_default=db.FetchedValue(), info='登录密码')
     login_salt = db.Column(db.String(32), nullable=False, server_default=db.FetchedValue(),
                            info='登录密码的随机加密秘钥')
-    role_management_id = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue(), info='角色表的id')
+    role_id = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue(), info='角色表的id')
     status = db.Column(db.Integer, nullable=False, server_default=db.FetchedValue(), info='1：有效 0：无效')
     updated_time = db.Column(db.DateTime, nullable=False, server_default=db.FetchedValue(), info='最后一次更新时间')
     created_time = db.Column(db.DateTime, nullable=False, server_default=db.FetchedValue(), info='插入时间')
@@ -143,11 +143,11 @@ class User(UserMixin, db.Model):
         return sex_map[str(self.sex)]
 
 
-class RoleManagement(db.Model):
+class Role(db.Model):
     """
     角色管理表
     """
-    __tablename__ = 'role_management'
+    __tablename__ = 'role'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True, comment='主键ID')
     role_name = db.Column(db.String(100), nullable=False, comment='角色名称')
     creator = db.Column(db.String(100), nullable=False, comment='创建人')
@@ -180,7 +180,7 @@ class RolePermission(db.Model):
     角色权限关联表
     """
     __tablename__ = 'role_permissions'
-    role_id = db.Column(db.Integer, db.ForeignKey('role_management.id'), primary_key=True)
+    role_id = db.Column(db.Integer, db.ForeignKey('role.id'), primary_key=True)
     permission_id = db.Column(db.Integer, db.ForeignKey('permissions.id'), primary_key=True)
 
 

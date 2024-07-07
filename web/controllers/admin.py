@@ -1,6 +1,5 @@
 from flask import Blueprint
-from common.libs.Helper import optRender
-from common.libs.Helper import getFormatDate
+from common.libs.Helper import optRender, getFormatDate
 from common.models.Model import StatDailySite
 import datetime
 
