@@ -32,7 +32,7 @@ def index():
     # 拼接角色数据
     role_ids = [user.role_id for user in users]
     roles = Role.query.filter(Role.id.in_(role_ids)).all()
-    role_dict = {role.id: role.role_name for role in roles}
+    role_dict = {role.id: role.name for role in roles}
 
     for user in users:
         role_name = role_dict.get(user.role_id, "未知角色")
@@ -233,11 +233,18 @@ def role():
     # 获取查询结果
     role_with_count = role_with_count_query.all()
 
-    # 格式化结果
+    # 格式化结果，包括权限信息
     role_list = [
         {
-            'role': role,
-            'user_count': user_count
+            'role': {
+                'id': role.id,
+                'name': role.name,
+                'creator': role.creator,
+                'created_time': role.created_time,
+                'status': role.status,
+                'permissions': ', '.join([perm.description for perm in role.permissions if perm.description])
+            },
+            'user_count': user_count,
         }
         for role, user_count in role_with_count
     ]
@@ -257,15 +264,18 @@ def role_set():
         rep = {
             "role": {
                 "assigned_people_count": 0,
+                "selected_permissions": []
             },
             "current": "role"
         }
         if request.values.get('id'):
             role = Role.query.filter_by(id=request.values.get('id')).first()
             if role:
+                selected_permissions = [perm.id for perm in role.permissions]
                 assigned_people_count = RolePermission.query.filter_by(permission_id=role.id).count()
                 rep["role"] = role
                 rep["role"].assigned_people_count = assigned_people_count
+                rep["role"].selected_permissions = selected_permissions
         return optRender('account/role_set.html', rep)
     elif request.method == "POST":
         resp = {

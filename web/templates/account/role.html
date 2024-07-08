@@ -31,6 +31,7 @@
                     <th>角色名称</th>
                     <th>分配人数</th>
                     <th>创建人(昵称)</th>
+                    <th style="width: 30%;">权限内容</th>
                     <th>创建时间</th>
                     <th>操作</th>
                 </tr>
@@ -39,9 +40,10 @@
                 {% if list %}
                     {% for item in list %}
                         <tr>
-                            <td>{{ item.role.role_name }}</td>
+                            <td>{{ item.role.name }}</td>
                             <td>{{ item.user_count }}</td>
                             <td>{{ item.role.creator }}</td>
+                            <td>{{ item.role.permissions }}</td>
                             <td>{{ item.role.created_time }}</td>
                             <td>
                                 {% if item.role.status == 1 %}

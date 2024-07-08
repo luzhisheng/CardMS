@@ -149,7 +149,7 @@ class Role(db.Model):
     """
     __tablename__ = 'role'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True, comment='主键ID')
-    role_name = db.Column(db.String(100), nullable=False, comment='角色名称')
+    name = db.Column(db.String(100), nullable=False, comment='角色名称')
     creator = db.Column(db.String(100), nullable=False, comment='创建人')
     status = db.Column(db.Integer, nullable=False, default=1, comment='1：有效 0：无效')
     created_time = db.Column(db.DateTime, nullable=False, server_default=db.func.current_timestamp(),
@@ -159,7 +159,7 @@ class Role(db.Model):
                                   backref=db.backref('roles', lazy='dynamic'))
 
     def __repr__(self):
-        return f'<RoleManagement {self.role_name}>'
+        return f'<RoleManagement {self.name}>'
 
 
 class Permission(db.Model):

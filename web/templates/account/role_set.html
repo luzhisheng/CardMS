@@ -9,7 +9,7 @@
                     <label class="col-lg-2 control-label">角色名称:</label>
                     <div class="col-lg-10">
                         <input type="text" name="role_name" class="form-control" placeholder="请输入角色名称~~"
-                               value="{{ role.role_name }}">
+                               value="{{ role.name }}">
                     </div>
                 </div>
                 <div class="hr-line-dashed"></div>
@@ -149,7 +149,8 @@
                                     <input name="member_comment" class="permission" type="checkbox" value="17"> 查询
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input name="member_comment_set" class="permission" type="checkbox" value="18"> 新增/更新
+                                    <input name="member_comment_set" class="permission" type="checkbox" value="18">
+                                    新增/更新
                                 </label>
                                 <label class="checkbox-inline">
                                     <input name="member_comment_ops" class="permission" type="checkbox" value="19"> 删除
@@ -169,7 +170,8 @@
                                     <input name="selectAll" type="checkbox" value=""> 全选
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input name="finance_index" name="finance_index" class="permission" type="checkbox" value="20"> 查询
+                                    <input name="finance_index" name="finance_index" class="permission" type="checkbox"
+                                           value="20"> 查询
                                 </label>
                             </div>
                         </div>
@@ -247,7 +249,7 @@
                                     <input name="selectAll" type="checkbox" value=""> 全选
                                 </label>
                                 <label class="checkbox-inline">
-                                    <input name="stat_index" class="permission" type="checkbox" value="26"> 查询
+                                    <input name="sys_index" class="permission" type="checkbox" value="26"> 查询
                                 </label>
                             </div>
                         </div>
@@ -265,5 +267,6 @@
     </div>
 {% endblock %}
 {% block js %}
+    <script> var selectedPermissions = {{ role.selected_permissions | tojson }}; </script>
     <script src="{{ buildStaticUrl('/js/account/role_set.js') }}"></script>
 {% endblock %}

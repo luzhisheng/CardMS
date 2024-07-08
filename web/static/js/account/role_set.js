@@ -3,6 +3,7 @@ var account_role_set_ops = {
     init: function () {
         this.eventBind();
         this.bindEvents();
+        this.setDefaultSelectedPermissions();
     },
     bindEvents: function () {
         $('input[name=selectAll]').change(this.handleSelectAllChange);
@@ -39,7 +40,7 @@ var account_role_set_ops = {
 
             // 定义所有权限的名称
             var permissionNames = [
-                "admin_index", "account_set", "account_ops", "account_role", "account_role_set", "account_role_ops",
+                "admin_index", "account_index", "account_set", "account_ops", "account_role", "account_role_set", "account_role_ops",
                 "card_index", "card_set", "card_ops", "card_cat", "card_cat_set", "card_cat_ops",
                 "member_index", "member_set", "member_ops", "member_comment", "member_comment_set", "member_comment_ops",
                 "finance_index", "finance_account", "stat_index", "stat_card", "stat_member", "stat_share", "sys_index"
@@ -91,6 +92,14 @@ var account_role_set_ops = {
 
         });
     },
+    setDefaultSelectedPermissions: function () {
+        selectedPermissions.forEach(function (permissionId) {
+            var checkbox = document.querySelector('input[class="permission"][value="' + permissionId + '"]');
+            if (checkbox) {
+                checkbox.checked = true;
+            }
+        });
+    }
 };
 
 $(document).ready(function () {
