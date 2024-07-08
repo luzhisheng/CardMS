@@ -8,6 +8,9 @@
                 <li {% if current == "role" %} class="current" {% endif %}>
                     <a href="{{ buildUrl('/account/role') }}">角色管理</a>
                 </li>
+                <li {% if current == "permission" %} class="current" {% endif %}>
+                    <a href="{{ buildUrl('/account/permission') }}">权限管理</a>
+                </li>
             </ul>
         </div>
     </div>

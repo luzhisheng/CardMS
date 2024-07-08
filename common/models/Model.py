@@ -170,6 +170,16 @@ class Permission(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True, comment='权限ID')
     name = db.Column(db.String(100), nullable=False, comment='权限名称')
     description = db.Column(db.String(255), comment='权限描述')
+    status = db.Column(db.Integer, nullable=False, default=1, comment='1：有效 0：无效')
+
+    status_mapping = {
+        "1": "正常",
+        "-1": "已删除"
+    }
+
+    @property
+    def status_desc(self):
+        return self.status_mapping[str(self.status)]
 
     def __repr__(self):
         return f'<Permission {self.name}>'

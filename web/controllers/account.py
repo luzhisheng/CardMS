@@ -285,10 +285,6 @@ def role_set():
             resp['msg'] = "请输入符合规范的创建人~~"
             return jsonify(resp)
 
-        # 获取权限ID
-        permissions_id = request.values.getlist('permissions_id[]')
-        print(permissions_id)
-
         if request.values.get('id'):
             # 修改数据
             role = Role.query.filter_by(id=int(request.values.get('id'))).first()
@@ -312,6 +308,107 @@ def role_set():
                 role.permissions.append(permission)
 
         db.session.add(role)
+        try:
+            db.session.commit()
+        except IntegrityError as e:
+            db.session.rollback()
+            resp['code'] = -1
+            resp['msg'] = f"数据库错误: {str(e)}"
+            return jsonify(resp)
+        return jsonify(resp)
+
+
+@route_account.route("/permission", methods=["GET", "POST"])
+def permissions():
+    query = Permission.query
+
+    status = request.values.get('status')
+    if status:
+        query = query.filter_by(status=status)
+
+    permission = query.all()
+    resp = {
+        'list': permission,
+        'search_con': request.values,
+        'status_mapping': Permission.status_mapping,
+        "current": "permission"
+    }
+    return optRender('account/permission.html', resp)
+
+
+@route_account.route("/permission_ops", methods=["POST"])
+def permission_ops():
+    req = request.values
+    if req.get('act') == "remove":
+        resp = {
+            'code': 200,
+            'msg': "删除角色成功",
+            "data": {}
+        }
+        permission = Permission.query.filter_by(id=req.get('id')).first()
+        permission.status = -1
+        db.session.add(permission)
+        db.session.commit()
+        return jsonify(resp)
+    else:
+        resp = {
+            'code': 200,
+            'msg': "恢复角色成功",
+            "data": {}
+        }
+        permission = Permission.query.filter_by(id=req.get('id')).first()
+        permission.status = 1
+        db.session.add(permission)
+        db.session.commit()
+        return jsonify(resp)
+
+
+@route_account.route("/permission_set", methods=["GET", "POST"])
+def permission_set():
+    if request.method == "GET":
+        rep = {
+            "permission": "",
+            "current": "permission"
+        }
+        if request.values.get('id'):
+            permission = Permission.query.filter_by(id=request.values.get('id')).first()
+            if permission:
+                rep["permission"] = permission
+        return optRender('account/permission_set.html', rep)
+    elif request.method == "POST":
+        resp = {
+            'code': 200,
+            'msg': "新增权限成功",
+            "data": {}
+        }
+        name = request.values.get('name')
+        if name is None:
+            resp['code'] = -1
+            resp['msg'] = "请输入符合规范的权限名称~~"
+            return jsonify(resp)
+
+        description = request.values.get('description')
+        if description is None:
+            resp['code'] = -1
+            resp['msg'] = "请输入符合规范的权限描述~~"
+            return jsonify(resp)
+
+        if request.values.get('id'):
+            # 修改数据
+            permission = Permission.query.filter_by(id=int(request.values.get('id'))).first()
+            if not permission:
+                resp['code'] = -1
+                resp['msg'] = "权限不存在"
+                return jsonify(resp)
+            resp['msg'] = "修改权限成功"
+        else:
+            # 新增数据
+            permission = Permission()
+            resp['msg'] = "新增权限成功"
+
+        permission.name = name
+        permission.description = description
+        db.session.add(permission)
         try:
             db.session.commit()
         except IntegrityError as e:
