@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from common.libs.Helper import optRender, paging
+from common.libs.Helper import optRender, paging, permission_required
 from common.models.Model import Member, MemberComments, Card
 from application import db
 
@@ -7,6 +7,7 @@ route_member = Blueprint('member_page', __name__)
 
 
 @route_member.route("/index")
+@permission_required("member_index")
 def index():
     req = request.values
     query = Member.query
@@ -35,6 +36,7 @@ def index():
 
 
 @route_member.route("/set", methods=["GET", "POST"])
+@permission_required("member_set")
 def set():
     if request.method == "GET":
         rep = {"info": ""}
@@ -81,6 +83,7 @@ def set():
 
 
 @route_member.route("/ops", methods=["POST"])
+@permission_required("member_ops")
 def cat_ops():
     req = request.values
     if req.get('act') == "remove":
@@ -108,6 +111,7 @@ def cat_ops():
 
 
 @route_member.route("/info", methods=["GET"])
+@permission_required("member_index")
 def info():
     info = Member.query.filter_by(id=request.values.get('id')).first()
     resp = {"info": info}
@@ -115,6 +119,7 @@ def info():
 
 
 @route_member.route("/comment", methods=["GET"])
+@permission_required("member_comment")
 def comment():
     req = request.values
 

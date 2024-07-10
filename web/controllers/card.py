@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from common.libs.Helper import optRender, paging, isInteger, isValidIntegerStock, isValidPrice
+from common.libs.Helper import optRender, paging, isInteger, isValidIntegerStock, isValidPrice, permission_required
 from common.models.Model import CardCat, Card, CardStockChangeLog, PayOrderItem, Member
 from sqlalchemy import or_
 from application import db
@@ -8,6 +8,7 @@ route_card = Blueprint("card_page", __name__)
 
 
 @route_card.route("/index", methods=["GET", "POST"])
+@permission_required("card_index")
 def index():
     query = Card.query
 
@@ -48,6 +49,7 @@ def index():
 
 
 @route_card.route("/cat", methods=["GET"])
+@permission_required("card_cat")
 def cat():
     query = CardCat.query
     req = request.values
@@ -79,6 +81,7 @@ def cat():
 
 
 @route_card.route("/set", methods=["GET", "POST"])
+@permission_required("card_set")
 def set():
     if request.method == "GET":
         if request.values.get('id'):
@@ -158,6 +161,7 @@ def set():
 
 
 @route_card.route("/cat-set", methods=["GET", "POST"])
+@permission_required("card_cat_set")
 def cat_set():
     if request.method == "GET":
         if request.values.get('id'):
@@ -200,6 +204,7 @@ def cat_set():
 
 
 @route_card.route("/cat-ops", methods=["POST"])
+@permission_required("card_cat_ops")
 def cat_ops():
     act = request.values.get('act')
     id = request.values.get('id')
@@ -228,6 +233,7 @@ def cat_ops():
 
 
 @route_card.route("/ops", methods=["POST"])
+@permission_required("card_ops")
 def ops():
     act = request.values.get('act')
     id = request.values.get('id')
@@ -256,6 +262,7 @@ def ops():
 
 
 @route_card.route("/info", methods=["GET"])
+@permission_required("card_index")
 def info():
     req_id = request.values.get('id')
     info = Card.query.filter_by(id=req_id).first()

@@ -1,6 +1,7 @@
 from flask import Blueprint, request
 from common.libs.Helper import getFormatDate, paging, getDictFilterField, selectFilterObj, optRender
 from common.models.Model import StatDailySite
+from common.libs.Helper import permission_required
 from common.models.Model import StatDailyCard
 from common.models.Model import StatDailyMember
 from common.models.Model import Member
@@ -11,6 +12,7 @@ route_stat = Blueprint("stat_page", __name__)
 
 
 @route_stat.route("/index", methods=["GET"])
+@permission_required("stat_index")
 def index():
     now = datetime.datetime.now()
     date_before_30days = now + datetime.timedelta(days=-30)
@@ -42,6 +44,7 @@ def index():
 
 
 @route_stat.route("/card")
+@permission_required("stat_card")
 def cards():
     now = datetime.datetime.now()
     date_before_30days = now + datetime.timedelta(days=-30)
@@ -85,6 +88,7 @@ def cards():
 
 
 @route_stat.route("/member")
+@permission_required("stat_member")
 def memebr():
     now = datetime.datetime.now()
     date_before_30days = now + datetime.timedelta(days=-30)
@@ -129,6 +133,7 @@ def memebr():
 
 
 @route_stat.route("/share")
+@permission_required("stat_share")
 def share():
     now = datetime.datetime.now()
     date_before_30days = now + datetime.timedelta(days=-30)

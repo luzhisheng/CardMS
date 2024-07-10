@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from common.libs.Helper import optRender, paging
+from common.libs.Helper import optRender, paging, permission_required
 from common.models.Model import MemberAddress, PayOrder, PayOrderItem, Card
 from application import app, db
 from sqlalchemy import func
@@ -8,6 +8,7 @@ route_finance = Blueprint('finance_page', __name__)
 
 
 @route_finance.route("/index")
+@permission_required("finance_index")
 def index():
     query = PayOrder.query
     if request.values.get('status'):
@@ -31,6 +32,7 @@ def index():
 
 
 @route_finance.route("/pay-info", methods=["GET"])
+@permission_required("finance_index")
 def pay_info():
     pay_info_id = request.values.get('id')
 
@@ -57,6 +59,7 @@ def pay_info():
 
 
 @route_finance.route("/account")
+@permission_required("finance_account")
 def account():
     query = PayOrder.query.filter_by(status=1)
 

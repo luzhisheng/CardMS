@@ -1,5 +1,5 @@
 from flask import Blueprint
-from common.libs.Helper import optRender, getFormatDate
+from common.libs.Helper import optRender, getFormatDate, permission_required
 from common.models.Model import StatDailySite
 import datetime
 
@@ -7,6 +7,7 @@ route_admin = Blueprint("admin_page", __name__)
 
 
 @route_admin.route("/")
+@permission_required("admin_index")
 def index():
     """
     仪表盘统计数据

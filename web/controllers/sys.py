@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from common.libs.Helper import optRender, paging
+from common.libs.Helper import optRender, paging, permission_required
 from common.models.Model import SysLog
 from sqlalchemy import or_
 
@@ -7,6 +7,7 @@ route_sys = Blueprint('sys_page', __name__)
 
 
 @route_sys.route("/index")
+@permission_required("sys_index")
 def index():
     query = SysLog.query
 

@@ -9,6 +9,7 @@ route_account = Blueprint("account_page", __name__)
 
 
 @route_account.route("/index")
+@permission_required("account_index")
 def index():
     query = User.query
 
@@ -49,6 +50,7 @@ def index():
 
 
 @route_account.route("/set", methods=["GET", "POST"])
+@permission_required("account_set")
 def set():
     if request.method == "GET":
         rep = {
@@ -145,6 +147,7 @@ def set():
 
 
 @route_account.route("/info", methods=["GET"])
+@permission_required("account_index")
 def info():
     uid = request.values.get('id')
     user_count = User.query.count()
@@ -161,6 +164,7 @@ def info():
 
 
 @route_account.route("/ops", methods=["POST"])
+@permission_required("account_ops")
 def ops():
     req = request.values
     if req.get('act') == "remove":
@@ -188,6 +192,7 @@ def ops():
 
 
 @route_account.route("/role_ops", methods=["POST"])
+@permission_required("account_role_ops")
 def role_ops():
     req = request.values
     if req.get('act') == "remove":
@@ -215,6 +220,7 @@ def role_ops():
 
 
 @route_account.route("/role", methods=["GET", "POST"])
+@permission_required("account_role")
 def role():
     query = db.session.query(Role)
 
@@ -259,6 +265,7 @@ def role():
 
 
 @route_account.route("/role_set", methods=["GET", "POST"])
+@permission_required("account_role_set")
 def role_set():
     if request.method == "GET":
         rep = {
@@ -317,6 +324,8 @@ def role_set():
             if permission:
                 role.permissions.append(permission)
 
+        role.name = role_name
+        role.creator = creator
         db.session.add(role)
         try:
             db.session.commit()
@@ -329,6 +338,7 @@ def role_set():
 
 
 @route_account.route("/permission", methods=["GET", "POST"])
+@permission_required("account_permission_index")
 def permissions():
     query = Permission.query
 
@@ -347,6 +357,7 @@ def permissions():
 
 
 @route_account.route("/permission_ops", methods=["POST"])
+@permission_required("account_permission_ops")
 def permission_ops():
     req = request.values
     if req.get('act') == "remove":
@@ -374,6 +385,7 @@ def permission_ops():
 
 
 @route_account.route("/permission_set", methods=["GET", "POST"])
+@permission_required("account_permission_set")
 def permission_set():
     if request.method == "GET":
         rep = {
