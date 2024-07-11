@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>403 Error</title>
+    <style>
+        body {
+            padding: 60px 30px;
+        }
+
+        .intro {
+            position: relative;
+            width: 100%;
+            text-align: center;
+            transition: 0.6s ease-in-out;
+        }
+
+        .intro__subhead {
+            position: relative;
+        }
+
+        body.oh-no .intro {
+            transform: rotate(12deg);
+        }
+
+        body.oh-no .intro__subhead::after {
+            content: ' y u do dis :\'(';
+            display: block;
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            color: red;
+            font-weight: bold;
+            text-align: center;
+            transform: translateX(-50%);
+        }
+
+        .lemmehaveit {
+            width: 100%;
+        }
+
+        .cupcake-canvas {
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .cupcake-svg-container {
+            box-sizing: content-box;
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: calc(100% * 289 / 594);
+        }
+
+        .cupcake-svg-container svg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <header class="intro">
+        <h1 class="intro__headline">403/404</h1>
+        <p class="intro__subhead">你……你不能查看这个。</p>
+    </header>
+
+    <section id="lemmehaveit" class="lemmehaveit">
+        <div id="cupcake-canvas" class="cupcake-canvas">
+            <div class="cupcake-svg-container">
+                <svg id="cupcake-svg" class="cupcake-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 594 289">
+                    <g fill="none" fill-rule="evenodd">
+                        <g id="cupcake-cupcake-cupcake" class="cupcake-cupcake-cupcake" transform="translate(221 147)">
+                            <polygon fill="#A46D91" points="0 0 150 0 126.118 77 23.882 77" transform="translate(0 65)"/>
+                            <g transform="translate(1)">
+                                <path fill="#D9B4E1" d="M147,65 C123.473567,32.3476562 123.042443,7.11328125 75.1325742,7.11328125 C27.222705,7.11328125 27.222705,32.3476562 1,65 C-0.851102327,67.3049807 1.7660192,69.8579856 3.1870857,72.013148 C6.73935714,77.4004553 16.084946,68.9072536 26.0901308,72.013148 C31.3734779,73.6532495 32.9551445,82.12837 39.2992966,83.1323032 C44.9367211,84.0244001 62.6215036,77.7331905 68.7159306,78.1229607 C73.896699,78.4542977 89.5299688,78.1546256 94.8015576,78.1229607 C100.338778,78.0897002 106.606709,78.5567275 111.995257,78.1229607 C116.56518,77.7550916 119.180045,78.7788902 123.473567,78.1229607 C127.261922,77.5442066 128.082452,75.8504403 131.541654,75.0474233 C135.985692,74.015787 136.936236,79.5247328 140.63558,78.1229607 C151.98734,73.821501 152.232256,72.2618497 147,65 Z"/>
+                                <ellipse cx="75.5" cy="7" fill="#FF0000" rx="8.5" ry="7"/>
+                            </g>
+                        </g>
+                        <rect id="cupcake-box" class="cupcake-box" width="230" height="170" fill="#A78C84" transform="translate(182 119)"/>
+                    </g>
+                </svg>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script>
+        let mX, mY, distance;
+        const cupcakeCanvas = document.getElementById('cupcake-canvas');
+        const cupcakeBox = document.getElementById('cupcake-box');
+        const cupcakeSVG = document.getElementById('cupcake-svg');
+        const cupcakeCupcakeCupcake = document.getElementById('cupcake-cupcake-cupcake');
+
+        // Set rotation origin.
+        gsap.set(cupcakeBox, {
+            transformOrigin: '0 100%',
+        });
+
+        // Meh, need to do something else for mobile. Concept doesn't quite work with mobile as-is.
+        document.addEventListener('mousemove', (e) => {
+            mX = e.pageX;
+            mY = e.pageY;
+            distance = calculateDistance(cupcakeSVG, mX, mY);
+
+            // Update box rotation depending on mouse position.
+            // This is done in a not so great way. Slow probs, bad probs.
+            if (distance > 180) {
+                gsap.set(cupcakeBox, {
+                    rotation: '-90'
+                });
+            } else {
+                gsap.set(cupcakeBox, {
+                    rotation: `-${Math.max(distance - 90, 0)}`
+                });
+            }
+        });
+
+        // Hey wait, no.
+        cupcakeCupcakeCupcake.addEventListener('click', () => {
+            document.body.classList.add('oh-no');
+            cupcakeCupcakeCupcake.parentNode.removeChild(cupcakeCupcakeCupcake);
+        });
+
+        // Calculate mouse distance relative to given element.
+        function calculateDistance(elem, mouseX, mouseY) {
+            const rect = elem.getBoundingClientRect();
+            const rectTop = rect.top + document.body.scrollTop;
+            const rectLeft = rect.left + document.body.scrollLeft;
+
+            return Math.floor(Math.sqrt(Math.pow(mouseX - (rectLeft + (rect.width / 2)), 2) + Math.pow(mouseY - (rectTop + (rect.height / 2)), 2)));
+        }
+    </script>
+</body>
+</html>

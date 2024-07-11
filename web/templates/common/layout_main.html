@@ -14,34 +14,48 @@
     <nav class="navbar-default navbar-static-side" role="navigation">
         <div class="sidebar-collapse">
             <ul class="nav metismenu" id="side-menu">
+                {% if has_permission('admin_index') %}
                 <li class="default">
                     <a href="{{ buildUrl('/admin') }}"><i class="fa fa-dashboard fa-lg fa-fw"></i>
                         <span class="nav-label">仪表盘</span></a>
                 </li>
+                {% endif %}
+                {% if has_permission('account_index') %}
                 <li class="account">
                     <a href="{{ buildUrl('/account/index') }}"><i class="fa fa-user fa-lg fa-fw"></i> <span
                             class="nav-label">账号管理</span></a>
                 </li>
+                {% endif %}
+                {% if has_permission('card_index') %}
                 <li class="card">
                     <a href="{{ buildUrl('/card/index') }}"><i class="fa fa-book fa-lg fa-fw"></i> <span
                             class="nav-label">卡券管理</span></a>
                 </li>
+                {% endif %}
+                {% if has_permission('member_index') %}
                 <li class="member">
                     <a href="{{ buildUrl('/member/index') }}"><i class="fa fa-group fa-lg fa-fw"></i> <span
                             class="nav-label">会员管理</span></a>
                 </li>
+                {% endif %}
+                {% if has_permission('finance_index') %}
                 <li class="finance">
                     <a href="{{ buildUrl('/finance/index') }}"><i class="fa fa-rmb fa-lg fa-fw"></i> <span
                             class="nav-label">财务管理</span></a>
                 </li>
+                {% endif %}
+                {% if has_permission('stat_index') %}
                 <li class="stat">
                     <a href="{{ buildUrl('/stat/index') }}"><i class="fa fa-bar-chart fa-lg fa-fw"></i> <span
                             class="nav-label">统计管理</span></a>
                 </li>
+                {% endif %}
+                {% if has_permission('sys_index') %}
                 <li class="sys">
                     <a href="{{ buildUrl('/sys/index') }}"><i class="fa fa-cog fa-lg fa-fw"></i> <span
                             class="nav-label">系统管理</span></a>
                 </li>
+                {% endif %}
             </ul>
 
         </div>

@@ -1,5 +1,6 @@
-from flask import render_template, request
-from common.models.Model import Role, RolePermission
+from flask import render_template, request, g
+from application import app
+from common.models.Model import Role
 from flask_login import current_user
 from functools import wraps
 from flask import abort
@@ -214,22 +215,39 @@ def selectFilterObj(obj, field):
     return ret
 
 
-def has_permission(role_id, permission):
+@app.before_request
+def load_user_permissions():
+    if current_user.is_authenticated:
+        role = Role.query.get(current_user.role_id)
+        if role:
+            g.permissions = [p.name for p in role.permissions]
+        else:
+            g.permissions = []
+    else:
+        g.permissions = []
+
+
+def has_permission(permission):
     """
     判断是否存在权限
-    :param role_id:
     :param permission:
     :return:
     """
-    role = Role.query.get(role_id)
-    if role:
-        permissions = role.permissions
-        if permission in [p.name for p in permissions]:
-            return True
-        else:
-            return False
+    if permission in g.permissions:
+        return True
     else:
         return False
+
+
+@app.context_processor
+def utility_processor():
+    return dict(has_permission=has_permission)
+
+
+# 处理 404 错误
+@app.errorhandler(404)
+def page_not_found(e):
+    return optRender("error/403.html")
 
 
 def permission_required(permission):
@@ -244,8 +262,8 @@ def permission_required(permission):
         def decorated_function(*args, **kwargs):
             if not current_user.is_authenticated:
                 return optRender("user/login.html")
-            if not has_permission(current_user.role_id, permission):
-                abort(403)
+            if not has_permission(permission):
+                return optRender("error/403.html")
             return f(*args, **kwargs)
 
         return decorated_function

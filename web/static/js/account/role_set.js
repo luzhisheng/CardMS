@@ -1,9 +1,181 @@
 ;
 var account_role_set_ops = {
     init: function () {
+        this.permissionsHtml();
         this.eventBind();
         this.bindEvents();
         this.setDefaultSelectedPermissions();
+    },
+    permissionsHtml: function () {
+        const permissions = [
+            {
+                category: '仪表盘权限',
+                subcategories: [
+                    {
+                        subcategory: '仪表盘',
+                        permissions: [
+                            {name: 'admin_index', label: '查询', value: '1'}
+                        ]
+                    }
+                ]
+            },
+            {
+                category: '账户管理权限',
+                subcategories: [
+                    {
+                        subcategory: '账户列表',
+                        permissions: [
+                            {name: 'account_index', label: '查询', value: '2'},
+                            {name: 'account_set', label: '新增/更新', value: '3'},
+                            {name: 'account_ops', label: '删除', value: '4'}
+                        ]
+                    },
+                    {
+                        subcategory: '角色管理',
+                        permissions: [
+                            {name: 'account_role', label: '查询', value: '5'},
+                            {name: 'account_role_set', label: '新增/更新', value: '6'},
+                            {name: 'account_role_ops', label: '删除', value: '7'}
+                        ]
+                    },
+                    {
+                        subcategory: '权限管理',
+                        permissions: [
+                            {name: 'account_permission_index', label: '查询', value: '27'},
+                            {name: 'account_permission_set', label: '新增/更新', value: '28'},
+                            {name: 'account_permission_ops', label: '删除', value: '29'}
+                        ]
+                    }
+                ]
+            },
+            {
+                category: '卡券管理权限',
+                subcategories: [
+                    {
+                        subcategory: '卡券列表',
+                        permissions: [
+                            {name: 'card_index', label: '查询', value: '8'},
+                            {name: 'card_set', label: '新增/更新', value: '9'},
+                            {name: 'card_ops', label: '删除', value: '10'}
+                        ]
+                    },
+                    {
+                        subcategory: '卡券分类',
+                        permissions: [
+                            {name: 'card_cat', label: '查询', value: '11'},
+                            {name: 'card_cat_set', label: '新增/更新', value: '12'},
+                            {name: 'card_cat_ops', label: '删除', value: '13'}
+                        ]
+                    }
+                ]
+            },
+            {
+                category: '会员管理权限',
+                subcategories: [
+                    {
+                        subcategory: '会员列表',
+                        permissions: [
+                            {name: 'member_index', label: '查询', value: '14'},
+                            {name: 'member_set', label: '新增/更新', value: '15'},
+                            {name: 'member_ops', label: '删除', value: '16'}
+                        ]
+                    },
+                    {
+                        subcategory: '会员评论',
+                        permissions: [
+                            {name: 'member_comment', label: '查询', value: '17'},
+                            {name: 'member_comment_set', label: '新增/更新', value: '18'},
+                            {name: 'member_comment_ops', label: '删除', value: '19'}
+                        ]
+                    }
+                ]
+            },
+            {
+                category: '财务管理权限',
+                subcategories: [
+                    {
+                        subcategory: '订单列表',
+                        permissions: [
+                            {name: 'finance_index', label: '查询', value: '20'}
+                        ]
+                    },
+                    {
+                        subcategory: '财务流水',
+                        permissions: [
+                            {name: 'finance_account', label: '查询', value: '21'}
+                        ]
+                    }
+                ]
+            },
+            {
+                category: '统计管理权限',
+                subcategories: [
+                    {
+                        subcategory: '财务统计',
+                        permissions: [
+                            {name: 'stat_index', label: '查询', value: '22'}
+                        ]
+                    },
+                    {
+                        subcategory: '售卖统计',
+                        permissions: [
+                            {name: 'stat_card', label: '查询', value: '23'}
+                        ]
+                    },
+                    {
+                        subcategory: '会员消费统计',
+                        permissions: [
+                            {name: 'stat_member', label: '查询', value: '24'}
+                        ]
+                    },
+                    {
+                        subcategory: '分享统计',
+                        permissions: [
+                            {name: 'stat_share', label: '查询', value: '25'}
+                        ]
+                    }
+                ]
+            },
+            {
+                category: '系统管理权限',
+                subcategories: [
+                    {
+                        subcategory: '用户行为日志',
+                        permissions: [
+                            {name: 'sys_index', label: '查询', value: '26'}
+                        ]
+                    }
+                ]
+            }
+        ];
+
+        permissions.forEach(permission => {
+            let categoryHtml = `
+            <div class="form-group">
+                <label class="col-lg-2 control-label">${permission.category}:</label>
+                <div class="col-lg-10">
+        `;
+            permission.subcategories.forEach(sub => {
+                categoryHtml += `
+                <div class="permissions-body">
+                    <label class="control-label"><i>${sub.subcategory}:</i></label>
+                    <div class="container mt-3">
+                        <label class="checkbox-inline">
+                            <input name="selectAll" type="checkbox" value=""> 全选
+                        </label>
+            `;
+                sub.permissions.forEach(perm => {
+                    categoryHtml += `
+                    <label class="checkbox-inline">
+                        <input name="${perm.name}" class="permission" type="checkbox" value="${perm.value}"> ${perm.label}
+                    </label>
+                `;
+                });
+                categoryHtml += `</div></div>`;
+            });
+            categoryHtml += `</div></div><div class="hr-line-dashed"></div>`;
+            $('#permissions-container').append(categoryHtml);
+        });
     },
     bindEvents: function () {
         $('input[name=selectAll]').change(this.handleSelectAllChange);
@@ -24,7 +196,6 @@ var account_role_set_ops = {
         }
     },
     eventBind: function () {
-
         $(".wrap_account_role_set .save").click(function () {
             var btn_target = $(this);
             if (btn_target.hasClass("disabled")) {
@@ -92,6 +263,7 @@ var account_role_set_ops = {
 
         });
     },
+    // 复选框默认选中
     setDefaultSelectedPermissions: function () {
         selectedPermissions.forEach(function (permissionId) {
             var checkbox = document.querySelector('input[class="permission"][value="' + permissionId + '"]');
