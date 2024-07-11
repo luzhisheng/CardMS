@@ -118,9 +118,10 @@ class User(UserMixin, db.Model):
 
     def set_password(self, password):
         # 设置密码
-        self.login_pwd = generate_password_hash(password)
+        return generate_password_hash(password)
 
     def check_password(self, password):
+        print(generate_password_hash(password))
         # 验证密码
         return check_password_hash(self.login_pwd, password)
 

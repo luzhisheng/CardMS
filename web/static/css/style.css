@@ -4605,7 +4605,7 @@ table.table-mail tr td {
 
 /* BACKGROUNDS */
 .gray-bg {
-    background-color: #f3f3f4;
+    background-color: #2f4050;
 }
 
 .white-bg {
@@ -5379,9 +5379,10 @@ body.mini-navbar.fixed-sidebar .logo-element {
 }
 
 .loginColumns {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 100px 20px 20px 20px;
+    display: flex;
+    justify-content: center; /* 水平居中 */
+    align-items: center; /* 垂直居中 */
+    height: 100vh; /* 全屏高度 */
 }
 
 .passwordBox {
@@ -9188,9 +9189,4 @@ body.rtls.top-navigation .footer.fixed {
     #page-wrapper {
         margin: 0;
     }
-}
-
-.col-md-6 {
-    float: none;
-    margin: 0 auto;
 }

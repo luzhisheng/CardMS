@@ -71,7 +71,7 @@
                 <div class="form-group">
                     <label class="col-lg-2 control-label">角色:</label>
                     <div class="col-lg-10">
-                        <select name="role_management" class="form-control inline">
+                        <select name="role_id" class="form-control inline">
                             {% for tmp_key in role_mapping %}
                                 <option value="{{ tmp_key }}" {% if tmp_key == user_info.role_id %}
                                         selected {% endif %}>{{ role_mapping[ tmp_key ] }}</option>

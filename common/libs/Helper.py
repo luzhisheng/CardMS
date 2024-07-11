@@ -17,7 +17,7 @@ def genPwd(pwd, salt):
     :param salt:
     :return:
     """
-    str = f"{base64.encodebytes(pwd.encode('utf-8'))}-{salt}"
+    str = f"{pwd}-{salt}"
     return str
 
 

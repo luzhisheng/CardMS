@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask import make_response, redirect
-from flask_login import login_user, login_required, current_user
+from flask_login import login_user, current_user, logout_user
 from common.libs.Helper import optRender, genPwd, permission_required
 from application import db
 import json
@@ -57,6 +57,7 @@ def login():
 
 
 @route_user.route("/edit", methods=["GET", "POST"])
+@permission_required('edit')
 def edit():
     if request.method == "GET":
         return optRender("user/edit.html", {'current': 'edit'})
@@ -89,6 +90,7 @@ def edit():
 
 
 @route_user.route("/reset-pwd", methods=["GET", "POST"])
+@permission_required('reset_pwd')
 def reset_pwd():
     if request.method == "GET":
         return optRender("user/reset_pwd.html", {'current': 'reset-pwd'})
@@ -108,7 +110,7 @@ def reset_pwd():
             resp['code'] = -1
             resp['msg'] = "请输入原密码~~"
             return jsonify(resp)
-        if genPwd(old_password, user_info.login_salt) != user_info.login_pwd:
+        if not user_info.check_password(genPwd(old_password, user_info.login_salt)):
             resp['code'] = -1
             resp['msg'] = "原密码错误~~"
             return jsonify(resp)
@@ -118,7 +120,7 @@ def reset_pwd():
             return jsonify(resp)
 
         # 更新数据库数据
-        user_info.login_pwd = genPwd(new_password, user_info.login_salt)
+        user_info.login_pwd = user_info.set_password(genPwd(new_password, user_info.login_salt))
         db.session.add(user_info)
         db.session.commit()
 
@@ -131,5 +133,5 @@ def reset_pwd():
 @route_user.route("/logout")
 def logout():
     response = make_response(redirect("/user/login"))
-    response.delete_cookie("file_server")
+    logout_user()
     return response

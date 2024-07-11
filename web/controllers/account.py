@@ -67,7 +67,7 @@ def set():
             user_info = User.query.filter_by(uid=request.values.get('id')).first()
             rep["user_info"] = user_info
         roles = Role.query.all()
-        role_dict = {role.id: role.role_name for role in roles}
+        role_dict = {role.id: role.name for role in roles}
         rep["role_mapping"] = role_dict
         return optRender('account/set.html', rep)
     elif request.method == "POST":
@@ -134,7 +134,7 @@ def set():
         login_salt = generateRandomNumber()
         user_info.avatar = avatar
         user_info.nickname = nickname
-        user_info.login_pwd = genPwd(login_pwd, login_salt)
+        user_info.login_pwd = user_info.set_password(genPwd(login_pwd, login_salt))
         user_info.login_salt = login_salt
         user_info.mobile = mobile
         user_info.email = email
@@ -279,10 +279,12 @@ def role_set():
             role = Role.query.filter_by(id=request.values.get('id')).first()
             if role:
                 selected_permissions = [perm.id for perm in role.permissions]
+                selected_permissions_name = [perm.name for perm in role.permissions]
                 assigned_people_count = RolePermission.query.filter_by(permission_id=role.id).count()
                 rep["role"] = role
                 rep["role"].assigned_people_count = assigned_people_count
                 rep["role"].selected_permissions = selected_permissions
+                rep["role"].selected_permissions_name = selected_permissions_name
         return optRender('account/role_set.html', rep)
     elif request.method == "POST":
         resp = {

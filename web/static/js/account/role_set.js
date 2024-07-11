@@ -45,6 +45,18 @@ var account_role_set_ops = {
                             {name: 'account_permission_set', label: '新增/更新', value: '28'},
                             {name: 'account_permission_ops', label: '删除', value: '29'}
                         ]
+                    },
+                    {
+                        subcategory: '信息编辑',
+                        permissions: [
+                            {name: 'edit', label: '更新', value: '31'},
+                        ]
+                    },
+                    {
+                        subcategory: '修改密码',
+                        permissions: [
+                            {name: 'reset_pwd', label: '更新', value: '32'},
+                        ]
                     }
                 ]
             },
@@ -210,12 +222,7 @@ var account_role_set_ops = {
             var creator = creator_target.val();
 
             // 定义所有权限的名称
-            var permissionNames = [
-                "admin_index", "account_index", "account_set", "account_ops", "account_role", "account_role_set", "account_role_ops",
-                "account_permission_index", "account_permission_set", "account_permission_ops", "card_index", "card_set", "card_ops", "card_cat", "card_cat_set", "card_cat_ops",
-                "member_index", "member_set", "member_ops", "member_comment", "member_comment_set", "member_comment_ops",
-                "finance_index", "finance_account", "stat_index", "stat_card", "stat_member", "stat_share", "sys_index"
-            ];
+            var permissionNames = selected_permissions_name
 
             // 收集所有权限的值
             var permissions = permissionNames.map(function (name) {
