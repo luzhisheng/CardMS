@@ -1,0 +1,59 @@
+{% extends "common/layout_main.html" %}
+{% block content %}
+    {% include "common/tab_sys.html" %}
+    <div class="row mg-t20 wrap_sys_set" style="">
+        <div class="col-lg-12" style="">
+            <h2 class="text-center">系统配置信息设置</h2>
+            <div class="form-horizontal m-t" style="">
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">小程序码:</label>
+                    <div class="col-lg-10">
+                        <form class="upload_pic_wrap upload_pic_xcx" target="upload_file" enctype="multipart/form-data" method="POST"
+                              action="{{ buildUrl('/upload/pic?controllers_type=sys') }}">
+                            <div class="upload_wrap pull-left">
+                                <i class="fa fa-upload fa-2x"></i>
+                                <input type="file" name="pic" accept="image/png, image/jpeg, image/jpg,image/gif">
+                            </div>
+                            {% if info and info.mini_program_code_image %}
+                                <span class="pic-each">
+                            <img src="{{ buildSysImageUrl( info.mini_program_code_image ) }}"/>
+                            <span class="fa fa-times-circle del del_image" data="{{ info.mini_program_code_image }}"></span>
+                        </span>
+                            {% endif %}
+                        </form>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">公众号码:</label>
+                    <div class="col-lg-10">
+                        <form class="upload_pic_wrap upload_pic_gzh" target="upload_file" enctype="multipart/form-data" method="POST"
+                              action="{{ buildUrl('/upload/pic?controllers_type=sys&js=window.parent.upload_gzh') }}">
+                            <div class="upload_wrap pull-left">
+                                <i class="fa fa-upload fa-2x"></i>
+                                <input type="file" name="pic" accept="image/png, image/jpeg, image/jpg,image/gif">
+                            </div>
+                            {% if info and info.public_number_image %}
+                                <span class="pic-each">
+                            <img src="{{ buildSysImageUrl( info.public_number_image ) }}"/>
+                            <span class="fa fa-times-circle del del_image" data="{{ info.public_number_image }}"></span>
+                        </span>
+                            {% endif %}
+                        </form>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <div class="col-lg-4 col-lg-offset-2">
+                        <input type="hidden" name="id" value="{{ info.id }}">
+                        <button class="btn btn-w-m btn-outline btn-primary save">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <iframe name="upload_file" class="hide"></iframe>
+{% endblock %}
+{% block js %}
+    <script src="{{ buildStaticUrl( '/js/sys/setting_set.js' ) }}"></script>
+{% endblock %}

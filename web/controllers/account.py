@@ -279,12 +279,10 @@ def role_set():
             role = Role.query.filter_by(id=request.values.get('id')).first()
             if role:
                 selected_permissions = [perm.id for perm in role.permissions]
-                selected_permissions_name = [perm.name for perm in role.permissions]
                 assigned_people_count = RolePermission.query.filter_by(permission_id=role.id).count()
                 rep["role"] = role
                 rep["role"].assigned_people_count = assigned_people_count
                 rep["role"].selected_permissions = selected_permissions
-                rep["role"].selected_permissions_name = selected_permissions_name
         return optRender('account/role_set.html', rep)
     elif request.method == "POST":
         resp = {

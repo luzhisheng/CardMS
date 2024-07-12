@@ -13,8 +13,12 @@ def ueditor():
 def pic_card():
     file_target = request.files
     controllers_type = request.values.get('controllers_type')
+    js = request.values.get('js')
     up_file = file_target['pic'] if 'pic' in file_target else None
-    callback_target = 'window.parent.upload'
+    if js:
+        callback_target = 'window.parent.upload_gzh'
+    else:
+        callback_target = 'window.parent.upload'
     if up_file is None:
         msg = '上传失败'
         return f"<script type='text/javascript'>{callback_target}.error('{msg}')</script>"

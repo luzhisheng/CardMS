@@ -5,6 +5,9 @@
                 <li {% if current == "index" %} class="current" {% endif %}>
                     <a href="{{ buildUrl('/sys/index') }}">用户行为日志</a>
                 </li>
+                <li {% if current == "setting_set" %} class="current" {% endif %}>
+                    <a href="{{ buildUrl('/sys/setting-set') }}">系统配置信息</a>
+                </li>
             </ul>
         </div>
     </div>

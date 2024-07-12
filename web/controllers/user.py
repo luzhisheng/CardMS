@@ -4,7 +4,7 @@ from flask_login import login_user, current_user, logout_user
 from common.libs.Helper import optRender, genPwd, permission_required
 from application import db
 import json
-from common.models.Model import User
+from common.models.Model import User, Setting
 
 route_user = Blueprint("user_page", __name__)
 
@@ -12,7 +12,11 @@ route_user = Blueprint("user_page", __name__)
 @route_user.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "GET":
-        return optRender("user/login.html")
+        setting = Setting.query.filter_by(id=1).first()
+        rep = {
+            "info": setting
+        }
+        return optRender("user/login.html", rep)
     elif request.method == "POST":
         resp = {
             'code': 200,

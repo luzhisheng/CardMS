@@ -516,3 +516,14 @@ class SysLog(db.Model):
     @property
     def operation_desc(self):
         return self.operation_mapping.get(self.operation, "未知类型")
+
+
+class Setting(db.Model):
+    """
+    配置信息表
+    """
+    __tablename__ = 'setting'
+
+    id = db.Column(db.Integer, primary_key=True)
+    mini_program_code_image = db.Column(db.String(100), nullable=False, server_default=db.FetchedValue(), info='小程序码')
+    public_number_image = db.Column(db.String(100), nullable=False, server_default=db.FetchedValue(), info='公众号码')

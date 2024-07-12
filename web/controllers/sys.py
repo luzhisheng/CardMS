@@ -1,12 +1,13 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 from common.libs.Helper import optRender, paging, permission_required
-from common.models.Model import SysLog
+from common.models.Model import SysLog, Setting
+from application import db
 from sqlalchemy import or_
 
 route_sys = Blueprint('sys_page', __name__)
 
 
-@route_sys.route("/index")
+@route_sys.route("/index", methods=["GET"])
 @permission_required("sys_index")
 def index():
     query = SysLog.query
@@ -42,3 +43,41 @@ def index():
         'operation_mapping': SysLog.operation_mapping,
     }
     return optRender("sys/index.html", resp_data)
+
+
+@route_sys.route("/setting-set", methods=["GET", "POST"])
+@permission_required("setting_set")
+def sys_setting_set():
+    setting = Setting.query.filter_by(id=1).first()
+    if request.method == "GET":
+        rep = {
+            "info": setting,
+            "current": "setting_set",
+        }
+        return optRender('sys/setting_set.html', rep)
+    elif request.method == "POST":
+        resp = {
+            'code': 200,
+            'msg': "修改配置信成功",
+            "data": {}
+        }
+
+        mini_program_code_image = request.values.get('mini_program_code_image')
+        if mini_program_code_image is None or len(mini_program_code_image) < 1:
+            resp['code'] = -1
+            resp['msg'] = "请输入符合规范的小程序码~~"
+            return jsonify(resp)
+
+        public_number_image = request.values.get('public_number_image')
+        if public_number_image is None or len(public_number_image) < 1:
+            resp['code'] = -1
+            resp['msg'] = "请输入符合规范的公众号码~~"
+            return jsonify(resp)
+
+        if not setting:
+            setting = Setting()
+        setting.mini_program_code_image = mini_program_code_image
+        setting.public_number_image = public_number_image
+        db.session.add(setting)
+        db.session.commit()
+        return jsonify(resp)

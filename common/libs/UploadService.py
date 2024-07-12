@@ -28,6 +28,8 @@ class UploadService(object):
             root_path = app.root_path + config_upload['prefix_path_member']
         elif "account" == prefix_name:
             root_path = app.root_path + config_upload['prefix_path_account']
+        elif "sys" == prefix_name:
+            root_path = app.root_path + config_upload['prefix_path_sys']
         else:
             root_path = app.root_path + config_upload['prefix_path']
         file_dir = getCurrentDate("%Y%m%d")

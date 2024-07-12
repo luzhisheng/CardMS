@@ -35,6 +35,5 @@
 {% endblock %}
 {% block js %}
     <script> var selectedPermissions = {{ role.selected_permissions | tojson }}; </script>
-    <script> var selected_permissions_name = {{ role.selected_permissions_name | tojson }}; </script>
     <script src="{{ buildStaticUrl('/js/account/role_set.js') }}"></script>
 {% endblock %}

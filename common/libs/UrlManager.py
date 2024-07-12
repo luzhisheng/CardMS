@@ -23,3 +23,7 @@ class UrlManager(object):
         # member 图片地址
         return f'/static/upload/member/{image_path}'
 
+    @staticmethod
+    def buildSysImageUrl(image_path):
+        # account 管理员图片地址
+        return f'/static/upload/sys/{image_path}'

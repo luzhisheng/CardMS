@@ -1,10 +1,8 @@
 from flask import render_template, request, g
 from application import app
-from common.models.Model import Role
+from common.models.Model import Role, Setting
 from flask_login import current_user
 from functools import wraps
-from flask import abort
-import base64
 import datetime
 import random
 import re
@@ -261,7 +259,12 @@ def permission_required(permission):
         @wraps(f)
         def decorated_function(*args, **kwargs):
             if not current_user.is_authenticated:
-                return optRender("user/login.html")
+                setting = Setting.query.filter_by(id=1).first()
+                rep = {
+                    "info": setting,
+                    "current": "setting_set",
+                }
+                return optRender("user/login.html", rep)
             if not has_permission(permission):
                 return optRender("error/403.html")
             return f(*args, **kwargs)

@@ -12,5 +12,6 @@ UPLOAD = {
     'prefix_path_card': '/web/static/upload/card/',
     'prefix_path_member': '/web/static/upload/member/',
     'prefix_path_account': '/web/static/upload/account/',
+    'prefix_path_sys': '/web/static/upload/sys/',
     'prefix_url': '/status/upload'
 }
